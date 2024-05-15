@@ -17,6 +17,9 @@ importers:
       '@nestjs/platform-express':
         specifier: ^10.0.0
         version: 10.3.8(@nestjs/common@10.3.8(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/core@10.3.8)
+      quidquid-picker:
+        specifier: ^0.1.0
+        version: 0.1.0
       reflect-metadata:
         specifier: ^0.2.0
         version: 0.2.2
@@ -2224,6 +2227,9 @@ packages:
   queue-microtask@1.2.3:
     resolution: {integrity: sha512-NuaNSa6flKT5JaSYQzJok04JzTL1CA6aGhv5rfLW3PgqA+M2ChpZQnAC8h8i4ZFkBS8X5RqkDBHA7r4hej3K9A==}
 
+  quidquid-picker@0.1.0:
+    resolution: {integrity: sha512-uhYZ5Lxo/5Ojg6usmBOGYfVZYUxBZS7IdGfwIe9iXuR+SW0wVKvgcj9uVd5ZGlGtmSnI51S3AXEuTPrqytNZ6A==}
+
   randombytes@2.1.0:
     resolution: {integrity: sha512-vYl3iOX+4CKUWuxGi9Ukhie6fsqXqS9FE2Zaic4tNFD2N2QQaXOMFbuKK4QmDHC0JO6B1Zp41J0LpT0oR68amQ==}
 
@@ -2777,6 +2783,9 @@ packages:
   yocto-queue@0.1.0:
     resolution: {integrity: sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==}
     engines: {node: '>=10'}
+
+  zod@3.23.8:
+    resolution: {integrity: sha512-XBx9AXhXktjUqnepgTiE5flcKIYWi/rme0Eaj+5Y0lftuGBq+jyRu/md4WnuxqgP1ubdpNCsYEYPxrzVHD8d6g==}
 
 snapshots:
 
@@ -5372,6 +5381,10 @@ snapshots:
 
   queue-microtask@1.2.3: {}
 
+  quidquid-picker@0.1.0:
+    dependencies:
+      zod: 3.23.8
+
   randombytes@2.1.0:
     dependencies:
       safe-buffer: 5.2.1
@@ -5926,3 +5939,5 @@ snapshots:
   yn@3.1.1: {}
 
   yocto-queue@0.1.0: {}
+
+  zod@3.23.8: {}
