@@ -27,40 +27,40 @@ export abstract class Person {
     return this.firstname;
   }
 
-  public setFirstname(firstname: string): void {
-    this.firstname = firstname;
+  public setFirstname(firstname?: string): void {
+    if (firstname) this.firstname = firstname;
   }
 
   public getMiddlename(): string | null {
     return this.middlename;
   }
 
-  public setMiddlename(middlename: string | null): void {
-    this.middlename = middlename;
+  public setMiddlename(middlename?: string | null): void {
+    if (middlename) this.middlename = middlename;
   }
 
   public getLastname(): string {
     return this.lastname;
   }
 
-  public setLastname(lastname: string): void {
-    this.lastname = lastname;
+  public setLastname(lastname?: string): void {
+    if (lastname) this.lastname = lastname;
   }
 
   public getSex(): string {
     return this.sex.toString();
   }
 
-  public setSex(sex: Sex): void {
-    this.sex = sex;
+  public setSex(sex?: Sex): void {
+    if (sex) this.sex = sex;
   }
 
   public getAvatarURL(): string {
     return this.avatarURL;
   }
 
-  public setAvatarURL(avatarURL: string): void {
-    this.avatarURL = avatarURL;
+  public setAvatarURL(avatarURL?: string): void {
+    if (avatarURL) this.avatarURL = avatarURL;
   }
 
   public getCreationDate(): Date {

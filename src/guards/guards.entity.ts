@@ -25,16 +25,16 @@ export class Guard extends Person {
     return this.id;
   }
 
-  public setEmail(email: string) {
-    this.email = email;
+  public setEmail(email?: string) {
+    if (email) this.email = email;
   }
 
   public getEmail(): string {
     return this.email;
   }
 
-  public setPassword(password: string) {
-    this.password = password;
+  public setPassword(password?: string) {
+    if (password) this.password = password;
   }
 
   public getPassword(): string {
@@ -45,16 +45,16 @@ export class Guard extends Person {
     return this.admin;
   }
 
-  public setAdminStatus(status: boolean): void {
-    this.admin = status;
+  public setAdminStatus(status?: boolean): void {
+    if (status) this.admin = status;
   }
 
   public isDisabled(): boolean {
     return this.disabled;
   }
 
-  public setDisabledStatus(status: boolean): void {
-    this.disabled = status;
+  public setDisabledStatus(status?: boolean): void {
+    if (status) this.disabled = status;
   }
 }
 
