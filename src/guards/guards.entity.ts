@@ -1,9 +1,12 @@
 import Crypto from 'crypto';
 import { Person, Sex } from '../people/person.entity';
+import { ApiProperty } from '@nestjs/swagger';
 
 export class Guard extends Person {
   private id: string = Crypto.randomUUID();
+  @ApiProperty()
   private email: string;
+  @ApiProperty()
   private password: string;
   private admin: boolean;
   private disabled: boolean;

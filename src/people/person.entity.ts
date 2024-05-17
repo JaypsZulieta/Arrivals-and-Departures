@@ -1,13 +1,26 @@
+import { ApiProperty } from '@nestjs/swagger';
+
 export enum Sex {
   MALE = 'male',
   FEMALE = 'female',
 }
 
 export abstract class Person {
+  @ApiProperty({
+    type: String,
+  })
   private firstname: string;
+
   private middlename: string | null;
+
+  @ApiProperty()
   private lastname: string;
+
+  @ApiProperty({
+    enum: ['male', 'female'],
+  })
   private sex: Sex;
+
   private avatarURL: string = 'https://robohash.org/user';
   private creationDate: Date = new Date();
 
