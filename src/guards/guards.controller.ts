@@ -18,8 +18,8 @@ import {
 @UseFilters(ValidationExceptionFilter)
 export class GuardsController {
   @Post()
-  register(@Body(GuardsPipe) guard: Guard): Promise<Guard> {
-    throw Error('unimplemented method');
+  async register(@Body(GuardsPipe) guard: Guard): Promise<Guard> {
+    return guard;
   }
 
   @Get(':id')
