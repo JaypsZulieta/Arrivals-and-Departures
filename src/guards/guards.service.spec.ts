@@ -79,4 +79,21 @@ describe('GuardsService', () => {
       expect(guardFound).rejects.toThrow(NotFoundException);
     });
   });
+
+  describe('delete', () => {
+    it('should delete the corresponding guard', () => {
+      const guard = new GuardBuilder().build();
+      service.register(guard).then((guard) => {
+        service.delete(guard).then(() => {
+          const guardFound = service.findById(guard.getId());
+          expect(guardFound).rejects.toThrow(NotFoundException);
+        });
+      });
+    });
+
+    it('should throw a NotFoundException if the guard to be deleted does not exist', () => {
+      const guard = new GuardBuilder().build();
+      expect(service.delete(guard)).rejects.toThrow(NotFoundException);
+    });
+  });
 });
