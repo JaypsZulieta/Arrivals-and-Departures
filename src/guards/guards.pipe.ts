@@ -7,6 +7,10 @@ import { Sex } from '../people/person.entity';
 export class GuardsPipe implements PipeTransform<any, Promise<Guard>> {
   async transform(value: any): Promise<Guard> {
     const objectValue = Quidquid.from(value);
+    return await this.convertToGuardInstance(objectValue);
+  }
+
+  private async convertToGuardInstance(objectValue: Quidquid): Promise<Guard> {
     const firstname = await objectValue.pickString('firstname');
     const middlename =
       (await objectValue.pickStringOptional('middlename')) || null;
