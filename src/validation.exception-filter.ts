@@ -1,8 +1,4 @@
-import {
-  ArgumentsHost,
-  BadRequestException,
-  ExceptionFilter,
-} from '@nestjs/common';
+import { ArgumentsHost, ExceptionFilter } from '@nestjs/common';
 import { ValidationError } from 'quidquid-picker';
 import { Response } from 'express';
 
