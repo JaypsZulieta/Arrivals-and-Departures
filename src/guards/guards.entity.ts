@@ -1,5 +1,5 @@
 import Crypto from 'crypto';
-import { Person, Sex } from 'src/people/person.entity';
+import { Person, Sex } from '../people/person.entity';
 
 export class Guard extends Person {
   private id: string = Crypto.randomUUID();

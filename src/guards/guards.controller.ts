@@ -1,4 +1,4 @@
-import { ValidationExceptionFilter } from 'src/validation.exception-filter';
+import { ValidationExceptionFilter } from '../validation.exception-filter';
 import { Guard } from './guards.entity';
 import { GuardsPipe } from './guards.pipe';
 import {

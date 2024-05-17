@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable, PipeTransform } from '@nestjs/common';
-import { Quidquid, ValidationError } from 'quidquid-picker';
+import { Quidquid } from 'quidquid-picker';
 import { Guard, GuardBuilder } from './guards.entity';
-import { Sex } from 'src/people/person.entity';
+import { Sex } from '../people/person.entity';
 
 @Injectable()
 export class GuardsPipe implements PipeTransform<any, Promise<Guard>> {
