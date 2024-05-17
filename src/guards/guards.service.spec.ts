@@ -50,16 +50,32 @@ describe('GuardsService', () => {
   });
 
   describe('findById', () => {
-    it('should return a the guard with the corresponding id', async () => {
+    it('should return a the guard with the corresponding id', () => {
       const guard = new GuardBuilder().build();
-      await service.register(guard);
-      const guardFound = service.findById(guard.getId());
-      expect(guardFound).resolves.toBeInstanceOf(Guard);
-      expect(guardFound).resolves.toEqual(guard);
+      service.register(guard).then(() => {
+        const guardFound = service.findById(guard.getId());
+        expect(guardFound).resolves.toBeInstanceOf(Guard);
+        expect(guardFound).resolves.toEqual(guard);
+      });
     });
 
     it('should throw a NotFoundException if the guard wasnt found', () => {
       const guardFound = service.findById('123');
+      expect(guardFound).rejects.toThrow(NotFoundException);
+    });
+  });
+
+  describe('findByEmail', () => {
+    it('should return the guard with the corresponding email', async () => {
+      const guard = new GuardBuilder().build();
+      service.register(guard).then(() => {
+        const guardFound = service.findByEmail(guard.getEmail());
+        expect(guardFound).resolves.toEqual(guard);
+      });
+    });
+
+    it('should throw a NotFoundException if a guard with that email does not exist', () => {
+      const guardFound = service.findByEmail('jadjada');
       expect(guardFound).rejects.toThrow(NotFoundException);
     });
   });

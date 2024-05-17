@@ -8,6 +8,7 @@ import { Guard } from './guards.entity';
 export abstract class GuardsService {
   abstract register(guard: Guard): Promise<Guard>;
   abstract findById(id: string): Promise<Guard>;
+  abstract findByEmail(email: string): Promise<Guard>;
 }
 
 @Injectable()
@@ -36,6 +37,15 @@ export class StandardGuardService extends GuardsService {
     );
     if (!existingGuard)
       throw new NotFoundException(`guard with id ${id} does not exist`);
+    return existingGuard;
+  }
+
+  async findByEmail(email: string): Promise<Guard> {
+    const existingGuard = this.guardsRegistered.find(
+      (guard) => guard.getEmail() == email,
+    );
+    if (!existingGuard)
+      throw new NotFoundException(`Guard with email ${email} does not exist`);
     return existingGuard;
   }
 }
