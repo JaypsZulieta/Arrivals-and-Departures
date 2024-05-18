@@ -20,6 +20,19 @@ describe('GuardsService', () => {
     expect(service).toBeDefined();
   });
 
+  describe('hasAdmin', () => {
+    it('should return true if there already is an admin in the system', async () => {
+      const guard1 = new GuardBuilder().build();
+      guard1.setAdminStatus(true);
+      await service.register(guard1);
+      expect(service.hasAdmin()).resolves.toBe(true);
+    });
+
+    it('should return false if there is no admin in the system', () => {
+      expect(service.hasAdmin()).resolves.toBe(false);
+    });
+  });
+
   describe('register', () => {
     it('should resolve to an instance of Guard given a guard instance as well as being equal to that instance', () => {
       const guard = new GuardBuilder()
@@ -40,9 +53,7 @@ describe('GuardsService', () => {
       service
         .register(new GuardBuilder().email('jaypee.zulieta@lsu.edu.ph').build())
         .then(() => {
-          const guard2 = new GuardBuilder()
-            .email('jaypee.zulieta@lsu.edu.ph')
-            .build();
+          const guard2 = new GuardBuilder().email('jaypee.zulieta@lsu.edu.ph').build();
 
           const guardAdded = service.register(guard2);
           expect(guardAdded).rejects.toThrow(ConflictException);
@@ -128,10 +139,7 @@ describe('GuardsService', () => {
         email: 'john.smith@email.com',
       };
       const guardAdded = await service.register(guard);
-      const updatedGuard = service.update(
-        Quidquid.from(data),
-        guardAdded.getId(),
-      );
+      const updatedGuard = service.update(Quidquid.from(data), guardAdded.getId());
       expect(updatedGuard).resolves.not.toThrow();
       expect(updatedGuard).resolves.not.toThrow(ConflictException);
     });

@@ -9,11 +9,24 @@ export abstract class GuardsService {
   abstract findByEmail(email: string): Promise<Guard>;
   abstract delete(guard: Guard): Promise<void>;
   abstract update(data: Quidquid, id: string): Promise<Guard>;
+  abstract hasAdmin(): Promise<boolean>;
 }
 
 @Injectable()
 export class StandardGuardService extends GuardsService {
   private guardsRegistered: Guard[] = [];
+
+  private async countAdmins(): Promise<number> {
+    return this.guardsRegistered.reduce(
+      (accumelation, currentItem) =>
+        currentItem.isAdmin() ? ++accumelation : accumelation,
+      0,
+    );
+  }
+
+  async hasAdmin(): Promise<boolean> {
+    return (await this.countAdmins()) > 0;
+  }
 
   async register(guard: Guard): Promise<Guard> {
     if (await this.existByEmail(guard.getEmail()))
