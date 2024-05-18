@@ -58,21 +58,24 @@ export class StandardGuardService extends GuardsService {
     const password = await data.pickStringOptional('password');
     const isAdmin = await data.pickBooleanOptional('isAdmin');
     const isDisabled = await data.pickBooleanOptional('isDisabled');
+
     if (!(await this.existById(id)))
       throw new NotFoundException(`Guard with id ${id} does not exist`);
     const guard = await this.findById(id);
+
     if (email && (await this.existByEmail(email)) && guard.getEmail() != email)
       throw new ConflictException(`The email ${email} is already taken`);
+
     guard.setFirstname(firstname);
     guard.setMiddlename(middlename);
     guard.setLastname(lastname);
-    if (sex?.toLocaleLowerCase() == Sex.MALE.toString().toLowerCase())
-      guard.setSex(Sex.MALE);
+    if (sex?.toLowerCase() == Sex.MALE.toString().toLowerCase()) guard.setSex(Sex.MALE);
     else guard.setSex(Sex.FEMALE);
     guard.setEmail(email);
     guard.setPassword(password);
     guard.setAdminStatus(isAdmin);
     guard.setDisabledStatus(isDisabled);
+
     return guard;
   }
 
