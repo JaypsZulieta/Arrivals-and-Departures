@@ -4,12 +4,15 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { Guard } from './guards.entity';
+import { Quidquid } from 'quidquid-picker';
+import { Sex } from '../people/person.entity';
 
 export abstract class GuardsService {
   abstract register(guard: Guard): Promise<Guard>;
   abstract findById(id: string): Promise<Guard>;
   abstract findByEmail(email: string): Promise<Guard>;
   abstract delete(guard: Guard): Promise<void>;
+  abstract update(data: Quidquid, id: string): Promise<Guard>;
 }
 
 @Injectable()
@@ -55,6 +58,30 @@ export class StandardGuardService extends GuardsService {
       (guard) => guard.getId() == id,
     );
     return !existingGuard ? false : true;
+  }
+
+  async update(data: Quidquid, id: string): Promise<Guard> {
+    const firstname = await data.pickStringOptional('firstname');
+    const middlename = await data.pickStringOptional('middlename');
+    const lastname = await data.pickStringOptional('lastname');
+    const sex = await data.pickStringOptional('sex');
+    const email = await data.pickStringOptional('email');
+    const password = await data.pickStringOptional('password');
+    const isAdmin = await data.pickBooleanOptional('isAdmin');
+    const isDisabled = await data.pickBooleanOptional('isDisabled');
+    const guard = await this.findById(id);
+    if (email && (await this.existByEmail(email)) && guard.getEmail() != email)
+      throw new ConflictException(`The email ${email} is already taken`);
+    guard.setFirstname(firstname);
+    guard.setMiddlename(middlename);
+    guard.setLastname(lastname);
+    if (sex == Sex.MALE.toString().toLowerCase()) guard.setSex(Sex.MALE);
+    else guard.setSex(Sex.FEMALE);
+    guard.setEmail(email);
+    guard.setPassword(password);
+    guard.setAdminStatus(isAdmin);
+    guard.setDisabledStatus(isDisabled);
+    return guard;
   }
 
   async delete(guard: Guard): Promise<void> {

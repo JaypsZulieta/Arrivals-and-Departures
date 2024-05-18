@@ -3,6 +3,7 @@ import { GuardsService, StandardGuardService } from './guards.service';
 import { Guard, GuardBuilder } from './guards.entity';
 import { Sex } from '../people/person.entity';
 import { ConflictException, NotFoundException } from '@nestjs/common';
+import { Quidquid } from 'quidquid-picker';
 
 describe('GuardsService', () => {
   let service: GuardsService;
@@ -77,6 +78,67 @@ describe('GuardsService', () => {
     it('should throw a NotFoundException if a guard with that email does not exist', () => {
       const guardFound = service.findByEmail('jadjada');
       expect(guardFound).rejects.toThrow(NotFoundException);
+    });
+  });
+
+  describe('update', () => {
+    it('should return the guard instance with the properties updated', async () => {
+      const data = {
+        firstname: 'Jaypee',
+        middlename: 'Pagalan',
+        lastname: 'Zulieta',
+        sex: 'male',
+        email: 'jaypee.zulieta@lsu.edu.ph',
+        password: 'Xscvsdg5417!',
+        isAdmin: true,
+        isDisabled: true,
+      };
+      const updateData = Quidquid.from(data);
+      const guard = new GuardBuilder().build();
+      const guardAdded = await service.register(guard);
+      await service.update(updateData, guardAdded.getId());
+
+      const guardFound = await service.findById(guardAdded.getId());
+
+      expect(data.firstname).toBe(guardFound.getFirstname());
+      expect(data.middlename).toBe(guardFound.getMiddlename());
+      expect(data.lastname).toBe(guardFound.getLastname());
+      expect(data.sex).toBe(guardFound.getSex().toString());
+      expect(data.email).toBe(guardFound.getEmail());
+      expect(data.password).toBe(guardFound.getPassword());
+      expect(data.isAdmin).toBe(guardFound.isAdmin());
+      expect(data.isDisabled).toBe(guardFound.isDisabled());
+    });
+
+    it('should throw a ConflictError if it tries to update the email that is already taken', async () => {
+      const data = {
+        email: 'john.smith@email.com',
+      };
+      const guard1 = new GuardBuilder().build();
+      const guard2 = new GuardBuilder().email('person@email.com').build();
+      await service.register(guard1);
+      await service.register(guard2);
+      const updatedGuard = service.update(Quidquid.from(data), guard2.getId());
+      expect(updatedGuard).rejects.toThrow(ConflictException);
+    });
+
+    it('should not throw an error if the email value is the same as the value that was already there', async () => {
+      const guard = new GuardBuilder().build();
+      const data = {
+        email: 'john.smith@email.com',
+      };
+      const guardAdded = await service.register(guard);
+      const updatedGuard = service.update(
+        Quidquid.from(data),
+        guardAdded.getId(),
+      );
+      expect(updatedGuard).resolves.not.toThrow();
+      expect(updatedGuard).resolves.not.toThrow(ConflictException);
+    });
+
+    it('should throw a NotFoundException if the id being referenced does not exist', () => {
+      const updatedGuard = service.update(Quidquid.from({}), '123');
+      expect(updatedGuard).rejects.toThrow(NotFoundException);
     });
   });
 
