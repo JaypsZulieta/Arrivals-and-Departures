@@ -58,6 +58,8 @@ export class StandardGuardService extends GuardsService {
     const password = await data.pickStringOptional('password');
     const isAdmin = await data.pickBooleanOptional('isAdmin');
     const isDisabled = await data.pickBooleanOptional('isDisabled');
+    if (!(await this.existById(id)))
+      throw new NotFoundException(`Guard with id ${id} does not exist`);
     const guard = await this.findById(id);
     if (email && (await this.existByEmail(email)) && guard.getEmail() != email)
       throw new ConflictException(`The email ${email} is already taken`);
