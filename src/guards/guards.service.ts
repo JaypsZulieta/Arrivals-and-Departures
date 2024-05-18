@@ -1,8 +1,4 @@
-import {
-  ConflictException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { Guard } from './guards.entity';
 import { Quidquid } from 'quidquid-picker';
 import { Sex } from '../people/person.entity';
@@ -21,9 +17,7 @@ export class StandardGuardService extends GuardsService {
 
   async register(guard: Guard): Promise<Guard> {
     if (await this.existByEmail(guard.getEmail()))
-      throw new ConflictException(
-        `The email '${guard.getEmail()} is already taken'`,
-      );
+      throw new ConflictException(`The email '${guard.getEmail()} is already taken'`);
     this.guardsRegistered.push(guard);
     return guard;
   }
@@ -36,11 +30,8 @@ export class StandardGuardService extends GuardsService {
   }
 
   async findById(id: string): Promise<Guard> {
-    const existingGuard = this.guardsRegistered.find(
-      (guard) => guard.getId() == id,
-    );
-    if (!existingGuard)
-      throw new NotFoundException(`guard with id ${id} does not exist`);
+    const existingGuard = this.guardsRegistered.find((guard) => guard.getId() == id);
+    if (!existingGuard) throw new NotFoundException(`guard with id ${id} does not exist`);
     return existingGuard;
   }
 
@@ -54,9 +45,7 @@ export class StandardGuardService extends GuardsService {
   }
 
   private async existById(id: string): Promise<boolean> {
-    const existingGuard = this.guardsRegistered.find(
-      (guard) => guard.getId() == id,
-    );
+    const existingGuard = this.guardsRegistered.find((guard) => guard.getId() == id);
     return !existingGuard ? false : true;
   }
 
@@ -75,7 +64,8 @@ export class StandardGuardService extends GuardsService {
     guard.setFirstname(firstname);
     guard.setMiddlename(middlename);
     guard.setLastname(lastname);
-    if (sex == Sex.MALE.toString().toLowerCase()) guard.setSex(Sex.MALE);
+    if (sex?.toLocaleLowerCase() == Sex.MALE.toString().toLowerCase())
+      guard.setSex(Sex.MALE);
     else guard.setSex(Sex.FEMALE);
     guard.setEmail(email);
     guard.setPassword(password);
@@ -86,9 +76,7 @@ export class StandardGuardService extends GuardsService {
 
   async delete(guard: Guard): Promise<void> {
     if (!(await this.existById(guard.getId())))
-      throw new NotFoundException(
-        `Guard with id ${guard.getId()} does not exist`,
-      );
+      throw new NotFoundException(`Guard with id ${guard.getId()} does not exist`);
     this.guardsRegistered = this.guardsRegistered.filter(
       (guardInDatabase) => guardInDatabase.getId() != guard.getId(),
     );
