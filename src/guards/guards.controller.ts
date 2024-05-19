@@ -5,43 +5,33 @@ import {
   Body,
   Controller,
   Delete,
+  ForbiddenException,
   Get,
   Param,
+  ParseBoolPipe,
   ParseIntPipe,
   Patch,
   Post,
   Query,
   UseFilters,
 } from '@nestjs/common';
+import { GuardsService } from './guards.service';
 
 @Controller('guards')
 @UseFilters(ValidationExceptionFilter)
 export class GuardsController {
+  constructor(private guardService: GuardsService) {}
+
+  @Post('first')
+  async registerFirst(@Body(GuardsPipe) guard: Guard): Promise<Guard> {
+    if (await this.guardService.hasAdmin())
+      throw new ForbiddenException('There is already an admin in the system');
+    guard.setAdminStatus(true);
+    return await this.guardService.register(guard);
+  }
+
   @Post()
-  register(@Body(GuardsPipe) guard: Guard): Promise<Guard> {
-    throw Error('unimplemented method');
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string): Promise<Guard> {
-    throw Error('unimplemented method');
-  }
-
-  @Get()
-  findAll(
-    @Query('pageNumber', ParseIntPipe) pageNumber?: number,
-    @Query('pageSize', ParseIntPipe) pageSize?: number,
-  ): Promise<Guard[]> {
-    throw Error('unimplemented method');
-  }
-
-  @Patch(':id')
-  update(@Body() updateData: any, @Param('id') id: string): Promise<Guard> {
-    throw Error('unimplemented method');
-  }
-
-  @Delete(':id')
-  delete(@Param('id') id: string) {
-    throw Error('unimplemented method');
+  async register(@Body(GuardsPipe) guard: Guard): Promise<Guard> {
+    return await this.guardService.register(guard);
   }
 }
