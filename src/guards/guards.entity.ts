@@ -1,8 +1,9 @@
 import Crypto from 'crypto';
 import { Person, Sex } from '../people/person.entity';
 import { Exclude } from 'class-transformer';
+import { UserDetails } from 'src/users/users.service';
 
-export class Guard extends Person {
+export class Guard extends Person implements UserDetails {
   private id: string = Crypto.randomUUID();
   private email: string;
 
@@ -58,6 +59,9 @@ export class Guard extends Person {
 
   public setDisabledStatus(status?: boolean): void {
     if (status) this.disabled = status;
+  }
+  public getUsername(): string {
+    return this.getEmail();
   }
 }
 
