@@ -1,7 +1,7 @@
 import { GuardUsersService, UsersService } from './users.service';
 import { GuardsService, StandardGuardService } from '../guards/guards.service';
 import { GuardBuilder } from '../guards/guards.entity';
-import { ForbiddenException, UnauthorizedException } from '@nestjs/common';
+import { UnauthorizedException } from '@nestjs/common';
 
 describe('UsersService', () => {
   let service: UsersService;
