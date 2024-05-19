@@ -1,11 +1,12 @@
+import { Body, ClassSerializerInterceptor, Controller, ForbiddenException, Post, UseFilters, UseInterceptors } from '@nestjs/common';
 import { ValidationExceptionFilter } from '../validation.exception-filter';
+import { HttpExceptionFilter } from 'src/http.exeption-filter';
+import { GuardsService } from './guards.service';
 import { Guard } from './guards.entity';
 import { GuardsPipe } from './guards.pipe';
-import { Body, ClassSerializerInterceptor, Controller, ForbiddenException, Post, UseFilters, UseInterceptors } from '@nestjs/common';
-import { GuardsService } from './guards.service';
 
 @Controller('guards')
-@UseFilters(ValidationExceptionFilter)
+@UseFilters(ValidationExceptionFilter, HttpExceptionFilter)
 @UseInterceptors(ClassSerializerInterceptor)
 export class GuardsController {
   constructor(private guardService: GuardsService) {}
