@@ -1,4 +1,4 @@
-import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { GuardsService } from '../guards/guards.service';
 import { Guard } from '../guards/guards.entity';
 
@@ -24,7 +24,7 @@ export class GuardUsersService extends UsersService {
       return await this.guardService.findByEmail(username);
     } catch (error) {
       if (error instanceof NotFoundException)
-        throw new ForbiddenException('incorrect username or password');
+        throw new UnauthorizedException('incorrect username or password');
       throw error;
     }
   }

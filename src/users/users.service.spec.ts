@@ -1,7 +1,7 @@
 import { GuardUsersService, UsersService } from './users.service';
 import { GuardsService, StandardGuardService } from '../guards/guards.service';
 import { GuardBuilder } from '../guards/guards.entity';
-import { ForbiddenException } from '@nestjs/common';
+import { ForbiddenException, UnauthorizedException } from '@nestjs/common';
 
 describe('UsersService', () => {
   let service: UsersService;
@@ -26,7 +26,7 @@ describe('UsersService', () => {
 
     it('shoud throw a ForbiddenException if the user is not found', () => {
       const user = service.loadByUsername('hello');
-      expect(user).rejects.toThrow(ForbiddenException);
+      expect(user).rejects.toThrow(UnauthorizedException);
     });
   });
 });
