@@ -1,20 +1,7 @@
 import { ValidationExceptionFilter } from '../validation.exception-filter';
 import { Guard } from './guards.entity';
 import { GuardsPipe } from './guards.pipe';
-import {
-  Body,
-  Controller,
-  Delete,
-  ForbiddenException,
-  Get,
-  Param,
-  ParseBoolPipe,
-  ParseIntPipe,
-  Patch,
-  Post,
-  Query,
-  UseFilters,
-} from '@nestjs/common';
+import { Body, Controller, ForbiddenException, Post, UseFilters } from '@nestjs/common';
 import { GuardsService } from './guards.service';
 
 @Controller('guards')
