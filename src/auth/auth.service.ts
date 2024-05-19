@@ -1,4 +1,40 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Authentication } from './auth.entity';
+import JsonWebtoken from 'jsonwebtoken';
+import { UsersService } from 'src/users/users.service';
+import { ArgonPasswordEncoder } from 'jaypee-password-encoder';
 
 @Injectable()
-export class AuthService {}
+export class AuthService {
+  private jwtSecretKey: string = process.env.JWT_SECRET_KEY || 'jwtSecret';
+  private refreshTokenSecretKey: string =
+    process.env.REFRESH_TOKEN_SECRET_KEY || 'refreshTokenSecretKey';
+  private usersService: UsersService;
+  private passwordEncoder: ArgonPasswordEncoder;
+
+  constructor(usersService: UsersService, passwordEncoder: ArgonPasswordEncoder) {
+    this.usersService = usersService;
+    this.passwordEncoder = passwordEncoder;
+  }
+
+  async signIn(email: string, password: string): Promise<Authentication> {
+    const user = await this.usersService.loadByUsername(email);
+    if (!(await this.validatePassword(password, user.getPassword())))
+      throw new UnauthorizedException('incorrect email or password');
+    const payload = { sub: user.getId(), username: user.getPassword() };
+    const accessToken = JsonWebtoken.sign(payload, this.jwtSecretKey, {
+      expiresIn: '10mins',
+    });
+    const refreshToken = JsonWebtoken.sign(payload, this.refreshTokenSecretKey, {
+      expiresIn: '8hrs',
+    });
+    return new Authentication(user, accessToken, refreshToken);
+  }
+
+  private async validatePassword(
+    plainTextPassword: string,
+    encodedPassword: string,
+  ): Promise<boolean> {
+    return await this.passwordEncoder.validate(plainTextPassword, encodedPassword);
+  }
+}

@@ -1,4 +1,4 @@
-import { Module, Provider, Scope } from '@nestjs/common';
+import { Module, Provider } from '@nestjs/common';
 import { GuardUsersService, UsersService } from './users.service';
 import { GuardsModule, guardsServiceProvider } from '../guards/guards.module';
 
@@ -8,7 +8,7 @@ export const userServiceProvider = {
 } satisfies Provider;
 
 @Module({
-  providers: [userServiceProvider, guardsServiceProvider],
+  providers: [userServiceProvider],
   exports: [userServiceProvider],
   imports: [GuardsModule],
 })
