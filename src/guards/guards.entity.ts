@@ -1,9 +1,12 @@
 import Crypto from 'crypto';
 import { Person, Sex } from '../people/person.entity';
+import { Exclude } from 'class-transformer';
 
 export class Guard extends Person {
   private id: string = Crypto.randomUUID();
   private email: string;
+
+  @Exclude()
   private password: string;
   private admin: boolean;
   private disabled: boolean;
