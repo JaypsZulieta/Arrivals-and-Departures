@@ -1,4 +1,4 @@
-import { ArgumentMetadata, Injectable, PipeTransform } from '@nestjs/common';
+import { Injectable, PipeTransform } from '@nestjs/common';
 import { EmailAndPasswordCredentials } from './auth.entity';
 import { Quidquid } from 'quidquid-picker';
 
