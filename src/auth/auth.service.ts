@@ -1,7 +1,8 @@
+import 'dotenv/config';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { Authentication } from './auth.entity';
 import JsonWebtoken from 'jsonwebtoken';
-import { UsersService } from 'src/users/users.service';
+import { UserDetails, UsersService } from 'src/users/users.service';
 import { ArgonPasswordEncoder } from 'jaypee-password-encoder';
 
 @Injectable()
@@ -22,13 +23,7 @@ export class AuthService {
     if (!(await this.validatePassword(password, user.getPassword())))
       throw new UnauthorizedException('incorrect email or password');
     const payload = { sub: user.getId(), username: user.getPassword() };
-    const accessToken = JsonWebtoken.sign(payload, this.jwtSecretKey, {
-      expiresIn: '10mins',
-    });
-    const refreshToken = JsonWebtoken.sign(payload, this.refreshTokenSecretKey, {
-      expiresIn: '8hrs',
-    });
-    return new Authentication(user, accessToken, refreshToken);
+    return this.generateAuthentication(user, payload);
   }
 
   private async validatePassword(
@@ -36,5 +31,15 @@ export class AuthService {
     encodedPassword: string,
   ): Promise<boolean> {
     return await this.passwordEncoder.validate(plainTextPassword, encodedPassword);
+  }
+
+  private generateAuthentication(userDetails: UserDetails, payload: any): Authentication {
+    const accessToken = JsonWebtoken.sign(payload, this.jwtSecretKey, {
+      expiresIn: '10mins',
+    });
+    const refreshToken = JsonWebtoken.sign(payload, this.refreshTokenSecretKey, {
+      expiresIn: '8hrs',
+    });
+    return new Authentication(userDetails, accessToken, refreshToken);
   }
 }
