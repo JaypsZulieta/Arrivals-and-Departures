@@ -1,6 +1,6 @@
 import 'dotenv/config';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { Authentication } from './auth.entity';
+import { Authentication, RefreshAuthentication } from './auth.entity';
 import JsonWebtoken from 'jsonwebtoken';
 import { UserDetails, UsersService } from 'src/users/users.service';
 import { ArgonPasswordEncoder } from 'jaypee-password-encoder';
@@ -22,9 +22,14 @@ export class AuthService {
     const user = await this.usersService.loadByUsername(email);
     if (!(await this.validatePassword(password, user.getPassword())))
       throw new UnauthorizedException('incorrect email or password');
-    const payload = { sub: user.getId(), username: user.getPassword() };
+    const payload = { sub: user.getId(), username: user.getEmail() };
     return this.generateAuthentication(user, payload);
   }
+
+  // async refresh(token: string): Promise<RefreshAuthentication> {
+  //   const payload = JsonWebtoken.verify(token, this.refreshTokenSecretKey);
+  //   const username = payload?.username as string;
+  // }
 
   private async validatePassword(
     plainTextPassword: string,
