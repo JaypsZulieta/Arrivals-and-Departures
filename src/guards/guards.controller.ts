@@ -7,7 +7,7 @@ import {
   UseFilters,
   UseInterceptors,
 } from '@nestjs/common';
-import { ValidationExceptionFilter } from '../validation.exception-filter';
+import { ValidationExceptionFilter } from '../validation.exception.filter';
 import { HttpExceptionFilter } from '../http.exeption-filter';
 import { GuardsService } from './guards.service';
 import { Guard } from './guards.entity';

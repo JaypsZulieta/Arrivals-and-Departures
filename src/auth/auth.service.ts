@@ -26,16 +26,29 @@ export class AuthService {
     return this.generateAuthentication(user, payload);
   }
 
-  // async refresh(token: string): Promise<RefreshAuthentication> {
-  //   const payload = JsonWebtoken.verify(token, this.refreshTokenSecretKey);
-  //   const username = payload?.username as string;
-  // }
+  async refresh(token: string): Promise<RefreshAuthentication> {
+    const decodedPayload = JsonWebtoken.verify(token, this.refreshTokenSecretKey);
+    const username = decodedPayload['username'] as string;
+    const user = await this.usersService.loadByUsername(username);
+    const payload = { sub: user.getId(), username: user.getEmail() };
+    return this.generateRefreshAuthentication(payload);
+  }
 
   private async validatePassword(
     plainTextPassword: string,
     encodedPassword: string,
   ): Promise<boolean> {
     return await this.passwordEncoder.validate(plainTextPassword, encodedPassword);
+  }
+
+  private generateRefreshAuthentication(payload: any): RefreshAuthentication {
+    const accessToken = JsonWebtoken.sign(payload, this.jwtSecretKey, {
+      expiresIn: '10mins',
+    });
+    const refreshToken = JsonWebtoken.sign(payload, this.refreshTokenSecretKey, {
+      expiresIn: '8hrs',
+    });
+    return new RefreshAuthentication(accessToken, refreshToken);
   }
 
   private generateAuthentication(userDetails: UserDetails, payload: any): Authentication {
