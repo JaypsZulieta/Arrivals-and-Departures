@@ -9,22 +9,12 @@ import { Reflector } from '@nestjs/core';
 import { Request } from 'express';
 import JsonWebtoken from 'jsonwebtoken';
 import { UsersService } from 'src/users/users.service';
-
-export const AdminOnly = Reflector.createDecorator();
-
 @Injectable()
-export class AuthGuard implements CanActivate {
+export class AdminOnlyGuard implements CanActivate {
   private jwtSecretKey: string = process.env.JWT_SECRET_KEY || 'jwtSecretKey';
-  constructor(
-    private reflector: Reflector,
-    private userService: UsersService,
-  ) {}
+  constructor(private userService: UsersService) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    const adminOnly = this.reflector.get(AdminOnly, context.getHandler());
-    if (adminOnly == undefined) {
-      return true;
-    }
     const request = context.switchToHttp().getRequest<Request>();
     const token = request.headers['authorization']?.split('Bearer ')[1] as string;
     const payload = JsonWebtoken.verify(token, this.jwtSecretKey);
