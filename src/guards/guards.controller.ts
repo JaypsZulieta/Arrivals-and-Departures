@@ -1,5 +1,6 @@
 import {
   Body,
+  Get,
   ClassSerializerInterceptor,
   Controller,
   ForbiddenException,
@@ -42,5 +43,11 @@ export class GuardsController {
   async register(@Body(GuardsPipe) guard: Guard): Promise<Guard> {
     guard.setPassword(await this.passwordEncoder.encode(guard.getPassword()));
     return await this.guardService.register(guard);
+  }
+
+  @Get()
+  @UseGuards(AuthGuard)
+  async test(): Promise<string> {
+    return 'Hello, Authenticated user';
   }
 }

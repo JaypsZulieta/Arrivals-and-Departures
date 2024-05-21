@@ -9,12 +9,19 @@ import { Reflector } from '@nestjs/core';
 import { Request } from 'express';
 import JsonWebtoken from 'jsonwebtoken';
 import { UsersService } from 'src/users/users.service';
+
+export const AdminOnly = Reflector.createDecorator();
+
 @Injectable()
 export class AdminOnlyGuard implements CanActivate {
   private jwtSecretKey: string = process.env.JWT_SECRET_KEY || 'jwtSecretKey';
-  constructor(private userService: UsersService) {}
+  constructor(
+    private userService: UsersService,
+    private reflector: Reflector,
+  ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
+    const adminOnly = this.reflector.get(AdminOnly, context.getHandler());
     const request = context.switchToHttp().getRequest<Request>();
     const token = request.headers['authorization']?.split('Bearer ')[1] as string;
     const payload = JsonWebtoken.verify(token, this.jwtSecretKey);
@@ -22,6 +29,7 @@ export class AdminOnlyGuard implements CanActivate {
     const user = await this.userService.loadByUsername(username).catch(() => {
       throw new ForbiddenException('Forbidden');
     });
+    if (adminOnly == undefined) return true;
     return user.isAdmin();
   }
 }
