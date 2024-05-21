@@ -1,4 +1,4 @@
-import { Module, Provider } from '@nestjs/common';
+import { Module, Provider, forwardRef } from '@nestjs/common';
 import { GuardUsersService, UsersService } from './users.service';
 import { GuardsModule } from '../guards/guards.module';
 
@@ -10,6 +10,6 @@ export const userServiceProvider = {
 @Module({
   providers: [userServiceProvider],
   exports: [userServiceProvider],
-  imports: [GuardsModule],
+  imports: [forwardRef(() => GuardsModule)],
 })
 export class UsersModule {}
