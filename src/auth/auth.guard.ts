@@ -22,9 +22,6 @@ export class AuthGuard implements CanActivate {
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const adminOnly = this.reflector.get(AdminOnly, context.getHandler());
-    if (adminOnly == undefined) {
-      return true;
-    }
     const request = context.switchToHttp().getRequest<Request>();
     const token = request.headers['authorization']?.split('Bearer ')[1] as string;
     const payload = JsonWebtoken.verify(token, this.jwtSecretKey);
@@ -32,6 +29,7 @@ export class AuthGuard implements CanActivate {
     const user = await this.userService.loadByUsername(username).catch(() => {
       throw new ForbiddenException('Forbidden');
     });
+    if (adminOnly == undefined) return true;
     return user.isAdmin();
   }
 }
