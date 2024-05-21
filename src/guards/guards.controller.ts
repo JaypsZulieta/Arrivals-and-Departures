@@ -15,7 +15,7 @@ import { GuardsService } from './guards.service';
 import { Guard } from './guards.entity';
 import { GuardsPipe } from './guards.pipe';
 import { ArgonPasswordEncoder, PasswordEncoder } from 'jaypee-password-encoder';
-import { AdminOnlyGuard } from '../auth/auth.guard';
+import { AdminOnly, AuthGuard } from '../auth/auth.guard';
 
 @Controller('guards')
 @UseInterceptors(ClassSerializerInterceptor)
@@ -39,7 +39,8 @@ export class GuardsController {
   }
 
   @Post()
-  @UseGuards(AdminOnlyGuard)
+  @AdminOnly()
+  @UseGuards(AuthGuard)
   async register(@Body(GuardsPipe) guard: Guard): Promise<Guard> {
     guard.setPassword(await this.passwordEncoder.encode(guard.getPassword()));
     return await this.guardService.register(guard);

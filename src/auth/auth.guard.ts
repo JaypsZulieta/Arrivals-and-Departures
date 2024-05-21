@@ -13,7 +13,7 @@ import { UsersService } from 'src/users/users.service';
 export const AdminOnly = Reflector.createDecorator();
 
 @Injectable()
-export class AdminOnlyGuard implements CanActivate {
+export class AuthGuard implements CanActivate {
   private jwtSecretKey: string = process.env.JWT_SECRET_KEY || 'jwtSecretKey';
   constructor(
     private userService: UsersService,
