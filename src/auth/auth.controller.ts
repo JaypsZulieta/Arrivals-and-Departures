@@ -30,7 +30,7 @@ export class AuthController {
   }
 
   @Post()
-  async signIn(
+  public async signIn(
     @Body(AuthPipe) credentials: EmailAndPasswordCredentials,
   ): Promise<Authentication> {
     const email = credentials.getEmail();
@@ -39,7 +39,7 @@ export class AuthController {
   }
 
   @Put()
-  async refresh(
+  public async refresh(
     @Headers('Authorization') header: string,
   ): Promise<RefreshAuthentication> {
     const token = header.split('Bearer ')[1] as string;

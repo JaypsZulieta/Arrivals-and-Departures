@@ -29,7 +29,7 @@ export class GuardsController {
   }
 
   @Post('first')
-  async registerFirst(@Body(GuardsPipe) guard: Guard): Promise<Guard> {
+  public async registerFirst(@Body(GuardsPipe) guard: Guard): Promise<Guard> {
     if (await this.guardService.hasAdmin())
       throw new ForbiddenException('There is already an admin in the system');
     guard.setAdminStatus(true);
@@ -40,7 +40,7 @@ export class GuardsController {
   @Post()
   @AdminOnly()
   @UseGuards(AuthGuard)
-  async register(@Body(GuardsPipe) guard: Guard): Promise<Guard> {
+  public async register(@Body(GuardsPipe) guard: Guard): Promise<Guard> {
     guard.setPassword(await this.passwordEncoder.encode(guard.getPassword()));
     return await this.guardService.register(guard);
   }
