@@ -20,8 +20,8 @@ import { AuthService } from './auth.service';
 import { JsonWebtokenExceptionFilter } from 'src/jsonwebtoken.exception.filter';
 
 @Controller('auth')
-@UseFilters(ValidationExceptionFilter, HttpExceptionFilter, JsonWebtokenExceptionFilter)
 @UseInterceptors(ClassSerializerInterceptor)
+@UseFilters(ValidationExceptionFilter, HttpExceptionFilter, JsonWebtokenExceptionFilter)
 export class AuthController {
   private authService: AuthService;
 

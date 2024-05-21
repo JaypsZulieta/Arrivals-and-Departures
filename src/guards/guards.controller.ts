@@ -13,17 +13,20 @@ import { HttpExceptionFilter } from '../http.exeption-filter';
 import { GuardsService } from './guards.service';
 import { Guard } from './guards.entity';
 import { GuardsPipe } from './guards.pipe';
-import { ArgonPasswordEncoder } from 'jaypee-password-encoder';
+import { ArgonPasswordEncoder, PasswordEncoder } from 'jaypee-password-encoder';
 import { AdminOnlyGuard } from '../auth/auth.guard';
 
 @Controller('guards')
-@UseFilters(ValidationExceptionFilter, HttpExceptionFilter)
 @UseInterceptors(ClassSerializerInterceptor)
+@UseFilters(ValidationExceptionFilter, HttpExceptionFilter)
 export class GuardsController {
-  constructor(
-    private guardService: GuardsService,
-    private passwordEncoder: ArgonPasswordEncoder,
-  ) {}
+  private guardService: GuardsService;
+  private passwordEncoder: PasswordEncoder;
+
+  constructor(guardService: GuardsService, passwordEncoder: ArgonPasswordEncoder) {
+    this.guardService = guardService;
+    this.passwordEncoder = passwordEncoder;
+  }
 
   @Post('first')
   async registerFirst(@Body(GuardsPipe) guard: Guard): Promise<Guard> {
