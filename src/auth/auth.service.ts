@@ -18,7 +18,7 @@ export class AuthService {
     this.passwordEncoder = passwordEncoder;
   }
 
-  async signIn(email: string, password: string): Promise<Authentication> {
+  public async signIn(email: string, password: string): Promise<Authentication> {
     const user = await this.usersService.loadByUsername(email);
     if (!(await this.validatePassword(password, user.getPassword())))
       throw new UnauthorizedException('incorrect email or password');
@@ -26,7 +26,7 @@ export class AuthService {
     return this.generateAuthentication(user, payload);
   }
 
-  async refresh(token: string): Promise<RefreshAuthentication> {
+  public async refresh(token: string): Promise<RefreshAuthentication> {
     const decodedPayload = JsonWebtoken.verify(token, this.refreshTokenSecretKey);
     const username = decodedPayload['username'] as string;
     const user = await this.usersService.loadByUsername(username);
