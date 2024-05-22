@@ -12,8 +12,7 @@ export class GuardsPipe implements PipeTransform<any, Promise<Guard>> {
 
   private async convertToGuardInstance(objectValue: Quidquid): Promise<Guard> {
     const firstname = await objectValue.pickString('firstname');
-    const middlename =
-      (await objectValue.pickStringOptional('middlename')) || null;
+    const middlename = (await objectValue.pickStringOptional('middlename')) || null;
     const lastname = await objectValue.pickString('lastname');
     const sex = await objectValue.pickString('sex');
     const email = await objectValue.pickString('email');
