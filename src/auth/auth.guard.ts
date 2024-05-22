@@ -29,10 +29,12 @@ export class AuthGuard implements CanActivate {
     const token = request.headers['authorization']?.split('Bearer ')[1] as string;
     const payload = JsonWebtoken.verify(token, this.jwtSecretKey);
     const username = payload['username'] as string;
-    const user = await this.userService.loadByUsername(username).catch(() => {
-      throw new ForbiddenException('Forbidden');
-    });
-    if (adminOnly == undefined) return true;
-    return user.isAdmin();
+    try {
+      const user = await this.userService.loadByUsername(username);
+      if (adminOnly == undefined) return true;
+      return user.isAdmin();
+    } catch (error) {
+      return false;
+    }
   }
 }
