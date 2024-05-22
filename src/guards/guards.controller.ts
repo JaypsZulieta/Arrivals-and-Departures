@@ -15,10 +15,11 @@ import { Guard } from './guards.entity';
 import { GuardsPipe } from './guards.pipe';
 import { ArgonPasswordEncoder, PasswordEncoder } from 'jaypee-password-encoder';
 import { AdminOnly, AuthGuard } from '../auth/auth.guard';
+import { JsonWebtokenExceptionFilter } from 'src/jsonwebtoken.exception.filter';
 
 @Controller('guards')
 @UseInterceptors(ClassSerializerInterceptor)
-@UseFilters(ValidationExceptionFilter, HttpExceptionFilter)
+@UseFilters(ValidationExceptionFilter, HttpExceptionFilter, JsonWebtokenExceptionFilter)
 export class GuardsController {
   private guardService: GuardsService;
   private passwordEncoder: PasswordEncoder;
