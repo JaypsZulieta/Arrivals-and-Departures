@@ -1,7 +1,7 @@
 import 'dotenv/config';
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import e, { Request } from 'express';
+import { Request } from 'express';
 import JsonWebtoken from 'jsonwebtoken';
 import { UserDetails, UsersService } from 'src/users/users.service';
 
