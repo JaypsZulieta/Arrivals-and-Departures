@@ -3,6 +3,8 @@ import {
   ClassSerializerInterceptor,
   Controller,
   ForbiddenException,
+  Get,
+  Param,
   Post,
   UseFilters,
   UseGuards,
@@ -14,7 +16,7 @@ import { GuardsService } from './guards.service';
 import { Guard } from './guards.entity';
 import { GuardsPipe } from './guards.pipe';
 import { ArgonPasswordEncoder, PasswordEncoder } from 'jaypee-password-encoder';
-import { AdminOnly, AuthGuard } from '../auth/auth.guard';
+import { AdminOnly, AuthGuard, OwnerOnly } from '../auth/auth.guard';
 import { JsonWebtokenExceptionFilter } from 'src/jsonwebtoken.exception.filter';
 
 @Controller('guards')
@@ -44,5 +46,12 @@ export class GuardsController {
   public async register(@Body(GuardsPipe) guard: Guard): Promise<Guard> {
     guard.setPassword(await this.passwordEncoder.encode(guard.getPassword()));
     return await this.guardService.register(guard);
+  }
+
+  @Get(':guardId')
+  @OwnerOnly()
+  @UseGuards(AuthGuard)
+  public async findOne(@Param('guardId') guardId: string) {
+    return this.guardService.findById(guardId);
   }
 }

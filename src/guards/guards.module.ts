@@ -4,6 +4,7 @@ import { GuardsService, StandardGuardService } from './guards.service';
 import { PasswordModule } from '../password/password.module';
 import { ArgonPasswordEncoder } from 'jaypee-password-encoder';
 import { UsersModule } from '../users/users.module';
+import { AuthModule } from 'src/auth/auth.module';
 
 export const guardsServiceProvider = {
   provide: GuardsService,
@@ -11,7 +12,7 @@ export const guardsServiceProvider = {
 } satisfies Provider;
 
 @Module({
-  imports: [PasswordModule, forwardRef(() => UsersModule)],
+  imports: [PasswordModule, forwardRef(() => UsersModule), forwardRef(() => AuthModule)],
   controllers: [GuardsController],
   providers: [guardsServiceProvider, ArgonPasswordEncoder],
   exports: [guardsServiceProvider],

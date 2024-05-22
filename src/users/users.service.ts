@@ -3,6 +3,7 @@ import { GuardsService } from '../guards/guards.service';
 import { Guard } from '../guards/guards.entity';
 
 export abstract class UserDetails {
+  abstract getId(): string;
   abstract getUsername(): string;
   abstract getPassword(): string;
   abstract isDisabled(): boolean;

@@ -1,7 +1,8 @@
-import { ArgumentsHost, ExceptionFilter } from '@nestjs/common';
+import { ArgumentsHost, Catch, ExceptionFilter } from '@nestjs/common';
 import { ValidationError } from 'quidquid-picker';
 import { Response, Request } from 'express';
 
+@Catch(ValidationError)
 export class ValidationExceptionFilter implements ExceptionFilter<ValidationError> {
   catch(exception: ValidationError, host: ArgumentsHost) {
     const context = host.switchToHttp();
