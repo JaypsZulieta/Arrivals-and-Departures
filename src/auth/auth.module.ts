@@ -4,7 +4,8 @@ import { AuthService } from './auth.service';
 import { UsersModule } from '../users/users.module';
 import { PasswordModule } from '../password/password.module';
 import { GuardsModule } from '../guards/guards.module';
-import { PermissionsFilter, permissionsFilterChain } from './auth.guard';
+import { PermissionsFilter } from './auth.guard';
+import { permissionsFilterChain } from './permissions.filter.chain';
 
 const permissionsFilterProvider = {
   provide: PermissionsFilter,

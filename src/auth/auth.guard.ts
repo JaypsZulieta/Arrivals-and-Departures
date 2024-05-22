@@ -57,10 +57,6 @@ export class OwnerPermissionsFilter extends PermissionsFilter {
     return true;
   }
 }
-
-export const permissionsFilterChain = new AdminPermissionsFilter();
-permissionsFilterChain.setNextFilter(new OwnerPermissionsFilter());
-
 @Injectable()
 export class AuthGuard implements CanActivate {
   private jwtSecretKey: string = process.env.JWT_SECRET_KEY || 'jwtSecretKey';
