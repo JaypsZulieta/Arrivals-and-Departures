@@ -49,7 +49,6 @@ export class GuardsController {
   }
 
   @Get(':guardId')
-  @OwnerOnly()
   @UseGuards(AuthGuard)
   public async findOne(@Param('guardId') guardId: string) {
     return this.guardService.findById(guardId);
