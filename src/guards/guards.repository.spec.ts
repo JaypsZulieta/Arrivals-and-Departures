@@ -1,6 +1,6 @@
 import { PrismaService } from '../prisma/prisma.service';
 import { GuardBuilder } from './guards.entity';
-import { GuardsRepository, PrismaGuardRepository } from './guards.repository';
+import { PrismaGuardRepository } from './guards.repository';
 
 describe('GuardsRepository', () => {
   const prismaService = new PrismaService();
