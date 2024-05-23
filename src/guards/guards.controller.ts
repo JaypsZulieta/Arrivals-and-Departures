@@ -8,6 +8,7 @@ import {
   Param,
   Patch,
   Post,
+  Query,
   UseFilters,
   UseGuards,
   UseInterceptors,
@@ -21,6 +22,7 @@ import { ArgonPasswordEncoder, PasswordEncoder } from 'jaypee-password-encoder';
 import { AdminOnly, AuthGuard, OwnerOnly } from '../auth/auth.guard';
 import { JsonWebtokenExceptionFilter } from '../jsonwebtoken.exception.filter';
 import { Quidquid } from 'quidquid-picker';
+import { PaginatedContent } from 'src/pagination';
 
 @Controller('guards')
 @UseInterceptors(ClassSerializerInterceptor)
@@ -55,6 +57,14 @@ export class GuardsController {
   @UseGuards(AuthGuard)
   public async findOne(@Param('guardId') guardId: string) {
     return this.guardService.findById(guardId);
+  }
+
+  @Get()
+  public async findAll(
+    @Query('pageNummber') pageNumber?: number,
+    @Query('pageSize') pageSize?: number,
+  ): Promise<PaginatedContent<Guard>> {
+    return await this.guardService.findAll({ pageNumber: pageNumber || 1, pageSize });
   }
 
   @Patch(':guardId')

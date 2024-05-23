@@ -4,11 +4,13 @@ import { Quidquid } from 'quidquid-picker';
 import { Sex } from '../people/person.entity';
 import { GuardsRepository } from './guards.repository';
 import { ArgonPasswordEncoder } from 'jaypee-password-encoder';
+import { PaginatedContent, PaginationOptions } from 'src/pagination';
 
 export abstract class GuardsService {
   abstract register(guard: Guard): Promise<Guard>;
   abstract findById(id: string): Promise<Guard>;
   abstract findByEmail(email: string): Promise<Guard>;
+  abstract findAll(options?: PaginationOptions): Promise<PaginatedContent<Guard>>;
   abstract delete(guard: Guard): Promise<void>;
   abstract update(data: Quidquid, id: string): Promise<Guard>;
   abstract hasAdmin(): Promise<boolean>;
@@ -47,6 +49,12 @@ export class StandardGuardService extends GuardsService {
     if (!(await this.guardsRepository.existByEmail(email)))
       throw new NotFoundException(`guard with email ${email} does not exist`);
     return await this.guardsRepository.findByEmail(email);
+  }
+
+  public async findAll(
+    options?: PaginationOptions | undefined,
+  ): Promise<PaginatedContent<Guard>> {
+    return await this.guardsRepository.findAll(options);
   }
 
   public async update(data: Quidquid, id: string): Promise<Guard> {
