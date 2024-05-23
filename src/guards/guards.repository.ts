@@ -34,7 +34,6 @@ export class PrismaGuardRepository implements GuardsRepository {
   }
 
   public async hasAdmin(): Promise<boolean> {
-    console.log(await this.countAdmins());
     return (await this.countAdmins()) > 0;
   }
 
