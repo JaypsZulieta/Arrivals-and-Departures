@@ -5,16 +5,22 @@ import { PasswordModule } from '../password/password.module';
 import { ArgonPasswordEncoder } from 'jaypee-password-encoder';
 import { UsersModule } from '../users/users.module';
 import { AuthModule } from 'src/auth/auth.module';
+import { GuardsRepository, PrismaGuardRepository } from './guards.repository';
 
 export const guardsServiceProvider = {
   provide: GuardsService,
   useClass: StandardGuardService,
 } satisfies Provider;
 
+export const guardsRepositoryProvider = {
+  provide: GuardsRepository,
+  useClass: PrismaGuardRepository,
+} satisfies Provider;
+
 @Module({
   imports: [PasswordModule, forwardRef(() => UsersModule), forwardRef(() => AuthModule)],
   controllers: [GuardsController],
-  providers: [guardsServiceProvider, ArgonPasswordEncoder],
-  exports: [guardsServiceProvider],
+  providers: [guardsServiceProvider, ArgonPasswordEncoder, guardsRepositoryProvider],
+  exports: [guardsServiceProvider, guardsRepositoryProvider],
 })
 export class GuardsModule {}

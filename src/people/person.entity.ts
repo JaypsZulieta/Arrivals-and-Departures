@@ -11,12 +11,7 @@ export abstract class Person {
   private avatarURL: string = 'https://robohash.org/user';
   private creationDate: Date = new Date();
 
-  constructor(
-    firstname: string,
-    middlename: string | null,
-    lastname: string,
-    sex: Sex,
-  ) {
+  constructor(firstname: string, middlename: string | null, lastname: string, sex: Sex) {
     this.firstname = firstname;
     this.middlename = middlename;
     this.lastname = lastname;

@@ -1,0 +1,40 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+enum Sex {
+  male
+  female
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Person {
+  id Int @id @default(autoincrement())
+  firstname String
+  middlename String?
+  lastname String
+  sex Sex
+  avatarURL String @default("https://robohash.org/user")
+  creationDate DateTime @default(now())
+  guard Guard[]
+}
+
+model Guard {
+  id String @id @default(uuid())
+  email String @unique
+  password String
+  admin Boolean @default(false)
+  disabled Boolean @default(false)
+  personId Int @unique
+  peson Person @relation(fields: [personId], references: [id], onDelete: Cascade)
+}

@@ -2,6 +2,7 @@ import { ConflictException, Injectable, NotFoundException } from '@nestjs/common
 import { Guard } from './guards.entity';
 import { Quidquid } from 'quidquid-picker';
 import { Sex } from '../people/person.entity';
+import { GuardsRepository } from './guards.repository';
 
 export abstract class GuardsService {
   abstract register(guard: Guard): Promise<Guard>;
@@ -15,6 +16,12 @@ export abstract class GuardsService {
 @Injectable()
 export class StandardGuardService extends GuardsService {
   private guardsRegistered: Guard[] = [];
+  private guardsRepository: GuardsRepository;
+
+  constructor(guardsRepository: GuardsRepository) {
+    super();
+    this.guardsRepository = guardsRepository;
+  }
 
   private async countAdmins(): Promise<number> {
     return this.guardsRegistered.reduce(
@@ -29,6 +36,8 @@ export class StandardGuardService extends GuardsService {
   }
 
   async register(guard: Guard): Promise<Guard> {
+    if (await this.existById(guard.getId()))
+      throw new ConflictException(`Guard ${guard.getId()} already exists`);
     if (await this.existByEmail(guard.getEmail()))
       throw new ConflictException(`The email '${guard.getEmail()} is already taken'`);
     this.guardsRegistered.push(guard);

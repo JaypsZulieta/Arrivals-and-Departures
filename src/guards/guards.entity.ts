@@ -29,6 +29,10 @@ export class Guard extends Person implements UserDetails {
     return this.id;
   }
 
+  public setId(id: string): void {
+    this.id = id;
+  }
+
   public setEmail(email?: string) {
     if (email) this.email = email;
   }
@@ -60,6 +64,7 @@ export class Guard extends Person implements UserDetails {
   public setDisabledStatus(status?: boolean): void {
     if (status) this.disabled = status;
   }
+
   public getUsername(): string {
     return this.getEmail();
   }
