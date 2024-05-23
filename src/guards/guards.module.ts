@@ -4,7 +4,7 @@ import { GuardsService, StandardGuardService } from './guards.service';
 import { PasswordModule } from '../password/password.module';
 import { ArgonPasswordEncoder } from 'jaypee-password-encoder';
 import { UsersModule } from '../users/users.module';
-import { AuthModule } from 'src/auth/auth.module';
+import { AuthModule } from '../auth/auth.module';
 import { GuardsRepository, PrismaGuardRepository } from './guards.repository';
 
 export const guardsServiceProvider = {

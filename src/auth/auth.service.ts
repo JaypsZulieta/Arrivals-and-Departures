@@ -2,7 +2,7 @@ import 'dotenv/config';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { Authentication, RefreshAuthentication } from './auth.entity';
 import JsonWebtoken from 'jsonwebtoken';
-import { UserDetails, UsersService } from 'src/users/users.service';
+import { UserDetails, UsersService } from '../users/users.service';
 import { ArgonPasswordEncoder } from 'jaypee-password-encoder';
 
 @Injectable()

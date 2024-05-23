@@ -16,8 +16,8 @@ import { GuardsService } from './guards.service';
 import { Guard } from './guards.entity';
 import { GuardsPipe } from './guards.pipe';
 import { ArgonPasswordEncoder, PasswordEncoder } from 'jaypee-password-encoder';
-import { AdminOnly, AuthGuard, OwnerOnly } from '../auth/auth.guard';
-import { JsonWebtokenExceptionFilter } from 'src/jsonwebtoken.exception.filter';
+import { AdminOnly, AuthGuard } from '../auth/auth.guard';
+import { JsonWebtokenExceptionFilter } from '../jsonwebtoken.exception.filter';
 
 @Controller('guards')
 @UseInterceptors(ClassSerializerInterceptor)

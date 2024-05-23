@@ -1,19 +1,20 @@
-import { Test, TestingModule } from '@nestjs/testing';
 import { GuardsService, StandardGuardService } from './guards.service';
 import { Guard, GuardBuilder } from './guards.entity';
 import { Sex } from '../people/person.entity';
 import { ConflictException, NotFoundException } from '@nestjs/common';
 import { Quidquid } from 'quidquid-picker';
+import { PrismaClient } from '@prisma/client';
+import { PrismaGuardRepository } from './guards.repository';
+import { PrismaService } from '../prisma/prisma.service';
 
 describe('GuardsService', () => {
   let service: GuardsService;
+  const prismaClient = new PrismaClient();
 
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
-      providers: [StandardGuardService],
-    }).compile();
-
-    service = module.get<GuardsService>(StandardGuardService);
+    await prismaClient.person.deleteMany().then(() => {
+      service = new StandardGuardService(new PrismaGuardRepository(new PrismaService()));
+    });
   });
 
   it('should be defined', () => {
@@ -25,7 +26,7 @@ describe('GuardsService', () => {
       const guard1 = new GuardBuilder().build();
       guard1.setAdminStatus(true);
       await service.register(guard1);
-      expect(service.hasAdmin()).resolves.toBe(true);
+      expect(await service.hasAdmin()).toBe(true);
     });
 
     it('should return false if there is no admin in the system', () => {
@@ -34,7 +35,7 @@ describe('GuardsService', () => {
   });
 
   describe('register', () => {
-    it('should resolve to an instance of Guard given a guard instance as well as being equal to that instance', () => {
+    it('should resolve to an instance of Guard given a guard instance as well as being equal to that instance', async () => {
       const guard = new GuardBuilder()
         .email('jaypee.zulieta@lsu.edu.ph')
         .password('Xscvsdg5417!')
@@ -44,9 +45,8 @@ describe('GuardsService', () => {
         .sex(Sex.MALE)
         .build();
 
-      const guardAdded = service.register(guard);
-      expect(guardAdded).resolves.toBeInstanceOf(Guard);
-      expect(guardAdded).resolves.toEqual(guard);
+      const guardAdded = await service.register(guard);
+      expect(guardAdded).toBeInstanceOf(Guard);
     });
 
     it('should throw a ConflictException if the email is alreay taken', () => {
@@ -54,7 +54,6 @@ describe('GuardsService', () => {
         .register(new GuardBuilder().email('jaypee.zulieta@lsu.edu.ph').build())
         .then(() => {
           const guard2 = new GuardBuilder().email('jaypee.zulieta@lsu.edu.ph').build();
-
           const guardAdded = service.register(guard2);
           expect(guardAdded).rejects.toThrow(ConflictException);
         });
@@ -139,14 +138,14 @@ describe('GuardsService', () => {
         email: 'john.smith@email.com',
       };
       const guardAdded = await service.register(guard);
-      const updatedGuard = service.update(Quidquid.from(data), guardAdded.getId());
-      expect(updatedGuard).resolves.not.toThrow();
-      expect(updatedGuard).resolves.not.toThrow(ConflictException);
+      const updatedGuard = await service.update(Quidquid.from(data), guardAdded.getId());
+      expect(updatedGuard).toBe(Guard);
     });
 
-    it('should throw a NotFoundException if the id being referenced does not exist', () => {
-      const updatedGuard = service.update(Quidquid.from({}), '123');
-      expect(updatedGuard).rejects.toThrow(NotFoundException);
+    it('should throw a NotFoundException if the id being referenced does not exist', async () => {
+      expect(async () => await service.update(Quidquid.from({}), '123')).toThrow(
+        NotFoundException,
+      );
     });
   });
 
@@ -155,15 +154,18 @@ describe('GuardsService', () => {
       const guard = new GuardBuilder().build();
       service.register(guard).then((guard) => {
         service.delete(guard).then(() => {
-          const guardFound = service.findById(guard.getId());
-          expect(guardFound).rejects.toThrow(NotFoundException);
+          expect(async () => {
+            await service.findById(guard.getId());
+          }).toThrow(NotFoundException);
         });
       });
     });
 
-    it('should throw a NotFoundException if the guard to be deleted does not exist', () => {
+    it('should throw a NotFoundException if the guard to be deleted does not exist', async () => {
       const guard = new GuardBuilder().build();
-      expect(service.delete(guard)).rejects.toThrow(NotFoundException);
+      expect(async () => {
+        await service.delete(guard);
+      }).toThrow(NotFoundException);
     });
   });
 });

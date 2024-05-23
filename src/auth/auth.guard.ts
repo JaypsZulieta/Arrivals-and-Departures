@@ -3,7 +3,7 @@ import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { Request } from 'express';
 import JsonWebtoken from 'jsonwebtoken';
-import { UserDetails, UsersService } from 'src/users/users.service';
+import { UserDetails, UsersService } from '../users/users.service';
 
 export const AdminOnly = Reflector.createDecorator();
 export const OwnerOnly = Reflector.createDecorator();

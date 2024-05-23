@@ -17,7 +17,7 @@ import {
 } from './auth.entity';
 import { AuthPipe } from './auth.pipe';
 import { AuthService } from './auth.service';
-import { JsonWebtokenExceptionFilter } from 'src/jsonwebtoken.exception.filter';
+import { JsonWebtokenExceptionFilter } from '../jsonwebtoken.exception.filter';
 
 @Controller('auth')
 @UseInterceptors(ClassSerializerInterceptor)

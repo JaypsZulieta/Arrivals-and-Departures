@@ -1,7 +1,8 @@
 import { Guard, GuardBuilder } from './guards.entity';
 import { Sex } from '../people/person.entity';
 import { Guard as GuardData, Person as PersonData } from '@prisma/client';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { PrismaService } from '../prisma/prisma.service';
+import { Injectable } from '@nestjs/common';
 
 export abstract class GuardsRepository {
   abstract countAdmins(): Promise<number>;
@@ -14,6 +15,7 @@ export abstract class GuardsRepository {
   abstract delete(guard: Guard): Promise<void>;
 }
 
+@Injectable()
 export class PrismaGuardRepository implements GuardsRepository {
   private prismService: PrismaService;
 
@@ -26,6 +28,7 @@ export class PrismaGuardRepository implements GuardsRepository {
   }
 
   public async hasAdmin(): Promise<boolean> {
+    console.log(await this.countAdmins());
     return (await this.countAdmins()) > 0;
   }
 
@@ -52,6 +55,7 @@ export class PrismaGuardRepository implements GuardsRepository {
       });
       return this.buildGuard(guardData, personData);
     }
+
     const personData = await this.prismService.person.create({
       data: {
         firstname: guard.getFirstname(),
@@ -64,6 +68,7 @@ export class PrismaGuardRepository implements GuardsRepository {
     });
     const guardData = await this.prismService.guard.create({
       data: {
+        id: guard.getId(),
         email: guard.getEmail(),
         password: guard.getPassword(),
         admin: guard.isAdmin(),

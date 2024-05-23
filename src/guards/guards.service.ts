@@ -15,7 +15,6 @@ export abstract class GuardsService {
 
 @Injectable()
 export class StandardGuardService extends GuardsService {
-  private guardsRegistered: Guard[] = [];
   private guardsRepository: GuardsRepository;
 
   constructor(guardsRepository: GuardsRepository) {
@@ -23,52 +22,28 @@ export class StandardGuardService extends GuardsService {
     this.guardsRepository = guardsRepository;
   }
 
-  private async countAdmins(): Promise<number> {
-    return this.guardsRegistered.reduce(
-      (accumelation, currentItem) =>
-        currentItem.isAdmin() ? ++accumelation : accumelation,
-      0,
-    );
-  }
-
   async hasAdmin(): Promise<boolean> {
-    return (await this.countAdmins()) > 0;
+    return await this.guardsRepository.hasAdmin();
   }
 
   async register(guard: Guard): Promise<Guard> {
-    if (await this.existById(guard.getId()))
+    if (await this.guardsRepository.existById(guard.getId()))
       throw new ConflictException(`Guard ${guard.getId()} already exists`);
-    if (await this.existByEmail(guard.getEmail()))
+    if (await this.guardsRepository.existByEmail(guard.getEmail()))
       throw new ConflictException(`The email '${guard.getEmail()} is already taken'`);
-    this.guardsRegistered.push(guard);
-    return guard;
-  }
-
-  private async existByEmail(email: string): Promise<boolean> {
-    const existingGuard = this.guardsRegistered.find(
-      (guard) => guard.getEmail() == email,
-    );
-    return !existingGuard ? false : true;
+    return this.guardsRepository.save(guard);
   }
 
   async findById(id: string): Promise<Guard> {
-    const existingGuard = this.guardsRegistered.find((guard) => guard.getId() == id);
-    if (!existingGuard) throw new NotFoundException(`guard with id ${id} does not exist`);
-    return existingGuard;
+    if (!(await this.guardsRepository.existById(id)))
+      throw new NotFoundException(`guard with ${id} does not exist`);
+    return await this.guardsRepository.findById(id);
   }
 
   async findByEmail(email: string): Promise<Guard> {
-    const existingGuard = this.guardsRegistered.find(
-      (guard) => guard.getEmail() == email,
-    );
-    if (!existingGuard)
-      throw new NotFoundException(`Guard with email ${email} does not exist`);
-    return existingGuard;
-  }
-
-  private async existById(id: string): Promise<boolean> {
-    const existingGuard = this.guardsRegistered.find((guard) => guard.getId() == id);
-    return !existingGuard ? false : true;
+    if (!(await this.guardsRepository.existByEmail(email)))
+      throw new NotFoundException(`guard with email ${email} does not exist`);
+    return await this.guardsRepository.findByEmail(email);
   }
 
   async update(data: Quidquid, id: string): Promise<Guard> {
@@ -81,13 +56,16 @@ export class StandardGuardService extends GuardsService {
     const isAdmin = await data.pickBooleanOptional('isAdmin');
     const isDisabled = await data.pickBooleanOptional('isDisabled');
 
-    if (!(await this.existById(id)))
+    const doesNotExistById = !(await this.guardsRepository.existById(id));
+    const doesNotExistByEmail =
+      email && !(await this.guardsRepository.existByEmail(email));
+
+    if (doesNotExistById)
       throw new NotFoundException(`Guard with id ${id} does not exist`);
     const guard = await this.findById(id);
 
-    if (email && (await this.existByEmail(email)) && guard.getEmail() != email)
+    if (doesNotExistByEmail && guard.getEmail() != email)
       throw new ConflictException(`The email ${email} is already taken`);
-
     guard.setFirstname(firstname);
     guard.setMiddlename(middlename);
     guard.setLastname(lastname);
@@ -97,15 +75,12 @@ export class StandardGuardService extends GuardsService {
     guard.setPassword(password);
     guard.setAdminStatus(isAdmin);
     guard.setDisabledStatus(isDisabled);
-
-    return guard;
+    return this.guardsRepository.save(guard);
   }
 
   async delete(guard: Guard): Promise<void> {
-    if (!(await this.existById(guard.getId())))
-      throw new NotFoundException(`Guard with id ${guard.getId()} does not exist`);
-    this.guardsRegistered = this.guardsRegistered.filter(
-      (guardInDatabase) => guardInDatabase.getId() != guard.getId(),
-    );
+    if (!(await this.guardsRepository.existById(guard.getId())))
+      throw new NotFoundException(`guard with id ${guard.getId()} does not exist `);
+    await this.guardsRepository.delete(guard);
   }
 }
