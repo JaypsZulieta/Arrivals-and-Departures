@@ -25,11 +25,11 @@ export class StandardGuardService extends GuardsService {
     this.passwordEncoder = passwordEncoder;
   }
 
-  async hasAdmin(): Promise<boolean> {
+  public async hasAdmin(): Promise<boolean> {
     return await this.guardsRepository.hasAdmin();
   }
 
-  async register(guard: Guard): Promise<Guard> {
+  public async register(guard: Guard): Promise<Guard> {
     if (await this.guardsRepository.existById(guard.getId()))
       throw new ConflictException(`Guard ${guard.getId()} already exists`);
     if (await this.guardsRepository.existByEmail(guard.getEmail()))
@@ -37,19 +37,19 @@ export class StandardGuardService extends GuardsService {
     return this.guardsRepository.save(guard);
   }
 
-  async findById(id: string): Promise<Guard> {
+  public async findById(id: string): Promise<Guard> {
     if (!(await this.guardsRepository.existById(id)))
       throw new NotFoundException(`guard with ${id} does not exist`);
     return await this.guardsRepository.findById(id);
   }
 
-  async findByEmail(email: string): Promise<Guard> {
+  public async findByEmail(email: string): Promise<Guard> {
     if (!(await this.guardsRepository.existByEmail(email)))
       throw new NotFoundException(`guard with email ${email} does not exist`);
     return await this.guardsRepository.findByEmail(email);
   }
 
-  async update(data: Quidquid, id: string): Promise<Guard> {
+  public async update(data: Quidquid, id: string): Promise<Guard> {
     const firstname = await data.pickStringOptional('firstname');
     const middlename = await data.pickStringOptional('middlename');
     const lastname = await data.pickStringOptional('lastname');
@@ -78,7 +78,7 @@ export class StandardGuardService extends GuardsService {
     return this.guardsRepository.save(guard);
   }
 
-  async delete(guard: Guard): Promise<void> {
+  public async delete(guard: Guard): Promise<void> {
     if (!(await this.guardsRepository.existById(guard.getId())))
       throw new NotFoundException(`guard with id ${guard.getId()} does not exist `);
     await this.guardsRepository.delete(guard);
