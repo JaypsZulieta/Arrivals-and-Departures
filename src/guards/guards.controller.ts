@@ -2,9 +2,11 @@ import {
   Body,
   ClassSerializerInterceptor,
   Controller,
+  Delete,
   ForbiddenException,
   Get,
   Param,
+  Patch,
   Post,
   UseFilters,
   UseGuards,
@@ -16,8 +18,9 @@ import { GuardsService } from './guards.service';
 import { Guard } from './guards.entity';
 import { GuardsPipe } from './guards.pipe';
 import { ArgonPasswordEncoder, PasswordEncoder } from 'jaypee-password-encoder';
-import { AdminOnly, AuthGuard } from '../auth/auth.guard';
+import { AdminOnly, AuthGuard, OwnerOnly } from '../auth/auth.guard';
 import { JsonWebtokenExceptionFilter } from '../jsonwebtoken.exception.filter';
+import { Quidquid } from 'quidquid-picker';
 
 @Controller('guards')
 @UseInterceptors(ClassSerializerInterceptor)
@@ -52,5 +55,26 @@ export class GuardsController {
   @UseGuards(AuthGuard)
   public async findOne(@Param('guardId') guardId: string) {
     return this.guardService.findById(guardId);
+  }
+
+  @Patch(':guardId')
+  @OwnerOnly()
+  @UseGuards(AuthGuard)
+  public async updateGuard(
+    @Body() requestBody: any,
+    @Param('guardId') id: string,
+  ): Promise<Guard> {
+    const updateData = Quidquid.from(requestBody);
+    return await this.guardService.update(updateData, id);
+  }
+
+  @Delete(':id')
+  @AdminOnly()
+  @UseGuards(AuthGuard)
+  public async deleteGuard(@Param('id') id: string): Promise<{ message: string }> {
+    const guard = await this.guardService.findById(id);
+    const message = `successfully deleted ${guard.getFirstname()} ${guard.getLastname()}`;
+    await this.guardService.delete(guard);
+    return { message };
   }
 }

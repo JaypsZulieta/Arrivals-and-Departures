@@ -122,6 +122,8 @@ export class PrismaGuardRepository implements GuardsRepository {
       .build();
     guardEntity.setAvatarURL(personData.avatarURL);
     guardEntity.setId(guardData.id);
+    guardEntity.setAdminStatus(guardData.admin);
+    guardEntity.setDisabledStatus(guardData.disabled);
     if (personData.sex == 'female') guardEntity.setSex(Sex.FEMALE);
     else guardEntity.setSex(Sex.MALE);
     return guardEntity;

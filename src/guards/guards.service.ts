@@ -3,6 +3,7 @@ import { Guard } from './guards.entity';
 import { Quidquid } from 'quidquid-picker';
 import { Sex } from '../people/person.entity';
 import { GuardsRepository } from './guards.repository';
+import { ArgonPasswordEncoder } from 'jaypee-password-encoder';
 
 export abstract class GuardsService {
   abstract register(guard: Guard): Promise<Guard>;
@@ -16,10 +17,12 @@ export abstract class GuardsService {
 @Injectable()
 export class StandardGuardService extends GuardsService {
   private guardsRepository: GuardsRepository;
+  private passwordEncoder: ArgonPasswordEncoder;
 
-  constructor(guardsRepository: GuardsRepository) {
+  constructor(guardsRepository: GuardsRepository, passwordEncoder: ArgonPasswordEncoder) {
     super();
     this.guardsRepository = guardsRepository;
+    this.passwordEncoder = passwordEncoder;
   }
 
   async hasAdmin(): Promise<boolean> {
@@ -53,28 +56,25 @@ export class StandardGuardService extends GuardsService {
     const sex = await data.pickStringOptional('sex');
     const email = await data.pickStringOptional('email');
     const password = await data.pickStringOptional('password');
-    const isAdmin = await data.pickBooleanOptional('isAdmin');
-    const isDisabled = await data.pickBooleanOptional('isDisabled');
 
     const doesNotExistById = !(await this.guardsRepository.existById(id));
-    const doesNotExistByEmail =
-      email && !(await this.guardsRepository.existByEmail(email));
+    const existByEmail = email && (await this.guardsRepository.existByEmail(email));
 
     if (doesNotExistById)
       throw new NotFoundException(`Guard with id ${id} does not exist`);
     const guard = await this.findById(id);
 
-    if (doesNotExistByEmail && guard.getEmail() != email)
+    if (existByEmail && guard.getEmail() != email)
       throw new ConflictException(`The email ${email} is already taken`);
     guard.setFirstname(firstname);
     guard.setMiddlename(middlename);
     guard.setLastname(lastname);
-    if (sex?.toLowerCase() == Sex.MALE.toString().toLowerCase()) guard.setSex(Sex.MALE);
+    if (sex && sex?.toLowerCase() == Sex.MALE.toString().toLowerCase())
+      guard.setSex(Sex.MALE);
     else guard.setSex(Sex.FEMALE);
     guard.setEmail(email);
     guard.setPassword(password);
-    guard.setAdminStatus(isAdmin);
-    guard.setDisabledStatus(isDisabled);
+    guard.setPassword(await this.passwordEncoder.encode(guard.getPassword()));
     return this.guardsRepository.save(guard);
   }
 
