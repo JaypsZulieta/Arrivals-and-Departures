@@ -2,10 +2,12 @@ import {
   Body,
   ClassSerializerInterceptor,
   Controller,
+  DefaultValuePipe,
   Delete,
   ForbiddenException,
   Get,
   Param,
+  ParseIntPipe,
   Patch,
   Post,
   Query,
@@ -60,9 +62,10 @@ export class GuardsController {
   }
 
   @Get()
+  @UseGuards(AuthGuard)
   public async findAll(
-    @Query('pageNummber') pageNumber?: number,
-    @Query('pageSize') pageSize?: number,
+    @Query('pageNumber', new DefaultValuePipe('1'), ParseIntPipe) pageNumber?: number,
+    @Query('pageSize', new DefaultValuePipe('20'), ParseIntPipe) pageSize?: number,
   ): Promise<PaginatedContent<Guard>> {
     return await this.guardService.findAll({ pageNumber: pageNumber || 1, pageSize });
   }
