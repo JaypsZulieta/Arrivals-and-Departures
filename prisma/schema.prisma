@@ -38,3 +38,9 @@ model Guard {
   personId Int @unique
   peson Person @relation(fields: [personId], references: [id], onDelete: Cascade)
 }
+
+model Track {
+  id String @id @default(uuid())
+  trackName String @unique
+  creationDate DateTime @default(now())
+}
