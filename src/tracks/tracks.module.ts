@@ -18,6 +18,7 @@ const trackRepositoryProvider = {
 @Module({
   providers: [trackServiceProvider, trackRepositoryProvider, permissionsFilterProvider],
   controllers: [TracksController],
+  exports: [trackServiceProvider],
   imports: [UsersModule],
 })
 export class TracksModule {}

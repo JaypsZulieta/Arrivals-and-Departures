@@ -6,6 +6,8 @@ import { ConflictException, Injectable, NotFoundException } from '@nestjs/common
 
 export abstract class TrackService {
   public abstract create(track: Track): Promise<Track>;
+  public abstract existByName(name: string): Promise<boolean>;
+  public abstract existById(id: string): Promise<boolean>;
   public abstract findById(id: string): Promise<Track>;
   public abstract findByName(name: string): Promise<Track>;
   public abstract findAll(options?: PaginationOptions): Promise<PaginatedContent<Track>>;
@@ -29,6 +31,13 @@ export class StandardTrackService implements TrackService {
     if (await this.trackRepository.existByName(trackName))
       throw new ConflictException(`track with name ${trackName} already exists`);
     return await this.trackRepository.save(track);
+  }
+
+  public async existByName(name: string): Promise<boolean> {
+    return await this.trackRepository.existByName(name);
+  }
+  public async existById(id: string): Promise<boolean> {
+    return await this.trackRepository.existById(id);
   }
 
   public async findById(id: string): Promise<Track> {
