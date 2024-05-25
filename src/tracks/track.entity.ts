@@ -31,8 +31,8 @@ export class Track {
     return this.name;
   }
 
-  public setName(name: string): void {
-    this.name = name;
+  public setName(name?: string): void {
+    if (name) this.name = name;
   }
 
   public getCreationDate(): Date {
