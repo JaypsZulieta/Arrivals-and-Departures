@@ -2,6 +2,7 @@ import { PaginatedContent, PaginationOptions } from 'src/pagination';
 import { Track } from './track.entity';
 
 export abstract class TrackRepository {
+  public abstract count(): Promise<number>;
   public abstract save(track: Track): Promise<Track>;
   public abstract existById(id: string): Promise<boolean>;
   public abstract existByName(name: string): Promise<boolean>;

@@ -12,6 +12,7 @@ const trackRepository = {
   findByName: jest.fn(),
   findAll: jest.fn(),
   delete: jest.fn(),
+  count: jest.fn(),
 } satisfies jest.Mocked<TrackRepository>;
 const trackService = new StandardTrackService(trackRepository);
 
