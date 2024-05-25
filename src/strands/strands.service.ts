@@ -69,7 +69,7 @@ export class StandardStrandsService implements StrandsService {
 
   private async nameIsAvailable(strand: Strand): Promise<boolean> {
     return await this.findByName(strand.getName())
-      .then((existingStrand) => (existingStrand.getId() != strand.getId() ? false : true))
+      .then((existingStrand) => existingStrand.getId() == strand.getId())
       .catch(() => true);
   }
 
