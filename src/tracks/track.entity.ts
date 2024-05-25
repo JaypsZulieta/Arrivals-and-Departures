@@ -41,7 +41,6 @@ export class TrackBuilder {
   private idToSet?: string;
   private nameToSet: string = 'EPYC';
   private creationDateToSet?: Date;
-  private creatorToSet: UserDetails = new GuardBuilder().build();
 
   public id(id: string): TrackBuilder {
     this.idToSet = id;
@@ -55,11 +54,6 @@ export class TrackBuilder {
 
   public creationDate(date: Date): TrackBuilder {
     this.creationDateToSet = date;
-    return this;
-  }
-
-  public creator(creator: UserDetails): TrackBuilder {
-    this.creatorToSet = creator;
     return this;
   }
 
