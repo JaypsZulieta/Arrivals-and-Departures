@@ -3,6 +3,7 @@ import { TrackBuilder } from './track.entity';
 import { TrackRepository } from './track.repository';
 import { StandardTrackService } from './tracks.service';
 import { Quidquid } from 'quidquid-picker';
+import { InMemoryTrackRepository } from './in-memory.track.repository';
 
 const trackRepository = {
   save: jest.fn(),
@@ -97,6 +98,37 @@ describe('StandardTrackService', () => {
         await trackService.update(Quidquid.from('adada'), '123');
       };
       expect(action).rejects.toThrow(NotFoundException);
+    });
+
+    test('should throw a ConflictError if the name is already taken and it does not belong to the track being updated', async () => {
+      const trackRepository = new InMemoryTrackRepository();
+      const trackService = new StandardTrackService(trackRepository);
+      const track1 = new TrackBuilder().build();
+      const track2 = new TrackBuilder().name('SandyBridge').build();
+      await trackRepository.save(track1);
+      await trackRepository.save(track2);
+      const updateData = { name: 'EPYC' };
+      const action = async () => {
+        await trackService.update(Quidquid.from(updateData), track2.getId());
+      };
+      expect(action).rejects.toThrow(ConflictException);
+    });
+
+    test('should not throw an error if the name already exists but it belongs to the track being updated', async () => {
+      const trackRepository = new InMemoryTrackRepository();
+      const trackService = new StandardTrackService(trackRepository);
+      const track = new TrackBuilder().build();
+      await trackRepository.save(track);
+      const updateData = { name: 'EPYC' };
+      const updatedTrack = await trackService.update(
+        Quidquid.from(updateData),
+        track.getId(),
+      );
+      expect(updatedTrack.getId()).toBe(track.getId());
+      expect(updatedTrack.getName()).toBe(track.getName());
+      expect(async () => {
+        await trackService.update(Quidquid.from(updateData), track.getId());
+      }).not.toThrow(ConflictException);
     });
   });
 
