@@ -7,7 +7,7 @@ import { GuardsModule } from '../guards/guards.module';
 import { PermissionsFilter } from './auth.guard';
 import { permissionsFilterChain } from './permissions.filter.chain';
 
-const permissionsFilterProvider = {
+export const permissionsFilterProvider = {
   provide: PermissionsFilter,
   useValue: permissionsFilterChain,
 } satisfies Provider;

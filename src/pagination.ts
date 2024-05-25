@@ -1,5 +1,5 @@
 export type PaginationOptions = {
-  pageNumber: number;
+  pageNumber?: number;
   pageSize?: number;
 };
 
