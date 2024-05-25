@@ -120,14 +120,13 @@ describe('StandardTrackService', () => {
       const track = new TrackBuilder().build();
       await trackRepository.save(track);
       const updateData = { name: 'EPYC' };
-      const updatedTrack = await trackService.update(
-        Quidquid.from(updateData),
-        track.getId(),
-      );
+      const quidQuid = Quidquid.from(updateData);
+      const trackId = track.getId();
+      const updatedTrack = await trackService.update(quidQuid, trackId);
       expect(updatedTrack.getId()).toBe(track.getId());
       expect(updatedTrack.getName()).toBe(track.getName());
       expect(async () => {
-        await trackService.update(Quidquid.from(updateData), track.getId());
+        await trackService.update(quidQuid, trackId);
       }).not.toThrow(ConflictException);
     });
   });
