@@ -27,9 +27,9 @@ export class StandardStrandsService implements StrandsService {
     const strandId = strand.getId();
     const strandName = strand.getName();
     if (await this.existById(strandId))
-      throw new ConflictException(`Strand withd id '${strandId}' already exists`);
+      throw new ConflictException(`Strand with id '${strandId}' already exists`);
     if (await this.existByName(strand.getName()))
-      throw new ConflictException(`Strand withd name '${strandName}' already exists`);
+      throw new ConflictException(`Strand with name '${strandName}' already exists`);
     return this.strandRepository.save(strand);
   }
 
