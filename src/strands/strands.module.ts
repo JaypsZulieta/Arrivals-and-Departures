@@ -3,6 +3,8 @@ import { StrandsController } from './strands.controller';
 import { TracksModule } from '../tracks/tracks.module';
 import { StandardStrandsService, StrandsService } from './strands.service';
 import { PrismaStrandRepository, StrandRepository } from './strands.repository';
+import { AuthModule, permissionsFilterProvider } from '../auth/auth.module';
+import { UsersModule } from 'src/users/users.module';
 
 export const strandServiceProvider = {
   provide: StrandsService,
@@ -16,7 +18,7 @@ export const strandRepositoryProvider = {
 
 @Module({
   controllers: [StrandsController],
-  providers: [strandServiceProvider, strandRepositoryProvider],
-  imports: [TracksModule],
+  providers: [strandServiceProvider, strandRepositoryProvider, permissionsFilterProvider],
+  imports: [TracksModule, AuthModule, UsersModule],
 })
 export class StrandsModule {}
