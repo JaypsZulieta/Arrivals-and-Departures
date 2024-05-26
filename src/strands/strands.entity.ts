@@ -32,6 +32,9 @@ export class Strand {
   public setName(name?: string): void {
     if (name) this.name = name;
   }
+  public setTrackName(name?: string): void {
+    if (name) this.track = name;
+  }
 
   public getTrackName(): string {
     return this.track;

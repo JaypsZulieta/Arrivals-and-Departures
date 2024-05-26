@@ -43,4 +43,13 @@ model Track {
   id String @id @default(uuid())
   trackName String @unique
   creationDate DateTime @default(now())
+  strands Strand[]
+}
+
+model Strand {
+  id String @id @default(uuid())
+  strandName String @unique
+  trackId String
+  creationDate DateTime @default(now())
+  track Track @relation(fields: [trackId], references: [id], onDelete: Cascade)
 }
