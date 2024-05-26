@@ -3,9 +3,10 @@ import { StrandsInterceptor } from './strands.interceptor';
 import { ValidationExceptionFilter } from '../validation.exception.filter';
 import { Strand } from './strands.entity';
 import { StrandsService } from './strands.service';
+import { HttpExceptionFilter } from '../http.exeption-filter';
 
 @Controller('strands')
-@UseFilters(ValidationExceptionFilter)
+@UseFilters(ValidationExceptionFilter, HttpExceptionFilter)
 export class StrandsController {
   private strandService: StrandsService;
 
