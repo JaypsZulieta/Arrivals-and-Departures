@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   CallHandler,
   ConflictException,
   ExecutionContext,
@@ -42,7 +43,7 @@ export class SectionsInterceptor implements NestInterceptor {
       const section = await this.sectionsService.findById(sectionId);
       const sectionName = await requestBodyData.pickStringOptional('name');
       const strandName = await requestBodyData.pickStringOptional('strand');
-      const trackName = await requestBodyData.pickStringOptional('trackName');
+      const trackName = await requestBodyData.pickStringOptional('track');
 
       if (strandName && !(await this.strandService.existByName(strandName)))
         throw new NotFoundException(`Strand withd name '${strandName}' does not exist`);
@@ -62,6 +63,7 @@ export class SectionsInterceptor implements NestInterceptor {
     }
 
     const sectionName = await requestBodyData.pickString('name');
+    const gradeLevel = await requestBodyData.pickString('gradeLevel');
     const strandName = await requestBodyData.pickString('strand');
     const trackName = await requestBodyData.pickStringOptional('track');
 
@@ -74,6 +76,11 @@ export class SectionsInterceptor implements NestInterceptor {
       }
     }
     const section = new SectionBuilder().name(sectionName).strand(strandName).build();
+
+    if (gradeLevel == 'G11') section.setGradeLevel(gradeLevel);
+    else if (gradeLevel == 'G12') section.setGradeLevel(gradeLevel);
+    else throw new BadRequestException("gradeLevel must be either 'G11' or 'G12'");
+
     request.body = section;
     return next.handle();
   }

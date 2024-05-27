@@ -36,10 +36,14 @@ export class StandardSectionService implements SectionService {
   }
 
   public async findById(id: string): Promise<Section> {
+    if (!(await this.existById(id)))
+      throw new NotFoundException(`Section with id '${id}' does not exist`);
     return await this.repository.findById(id);
   }
 
   public async findByName(name: string): Promise<Section> {
+    if (!(await this.existByName(name)))
+      throw new NotFoundException(`Section with name '${name}' does not exist`);
     return await this.repository.findByName(name);
   }
 

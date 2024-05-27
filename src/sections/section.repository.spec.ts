@@ -1,6 +1,17 @@
 import { PrismaService } from '../prisma/prisma.service';
-import { PrismaSectionRepository } from './section.repository';
+import { PrismaSectionRepository, SectionRepository } from './section.repository';
 import { SectionBuilder } from './sections.entity';
+
+export const mockSectionRepository = {
+  save: jest.fn(),
+  findById: jest.fn(),
+  findByName: jest.fn(),
+  existById: jest.fn(),
+  existByName: jest.fn(),
+  findAll: jest.fn(),
+  count: jest.fn(),
+  delete: jest.fn(),
+} satisfies jest.Mocked<SectionRepository>;
 
 const prismaService = new PrismaService();
 const repository = new PrismaSectionRepository(prismaService);

@@ -19,17 +19,6 @@ export abstract class SectionRepository {
   abstract delete(section: Section): Promise<void>;
 }
 
-export const mockSectionRepository = {
-  save: jest.fn(),
-  findById: jest.fn(),
-  findByName: jest.fn(),
-  existById: jest.fn(),
-  existByName: jest.fn(),
-  findAll: jest.fn(),
-  count: jest.fn(),
-  delete: jest.fn(),
-} satisfies jest.Mocked<SectionRepository>;
-
 @Injectable()
 export class PrismaSectionRepository implements SectionRepository {
   private prismaService: PrismaService;

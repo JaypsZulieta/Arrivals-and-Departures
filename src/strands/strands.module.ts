@@ -19,6 +19,7 @@ export const strandRepositoryProvider = {
 @Module({
   controllers: [StrandsController],
   providers: [strandServiceProvider, strandRepositoryProvider, permissionsFilterProvider],
+  exports: [strandServiceProvider],
   imports: [TracksModule, AuthModule, UsersModule],
 })
 export class StrandsModule {}
