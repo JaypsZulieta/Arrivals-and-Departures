@@ -19,37 +19,52 @@ datasource db {
 }
 
 model Person {
-  id Int @id @default(autoincrement())
-  firstname String
-  middlename String?
-  lastname String
-  sex Sex
-  avatarURL String @default("https://robohash.org/user")
+  id           Int      @id @default(autoincrement())
+  firstname    String
+  middlename   String?
+  lastname     String
+  sex          Sex
+  avatarURL    String   @default("https://robohash.org/user")
   creationDate DateTime @default(now())
-  guard Guard[]
+  guard        Guard[]
 }
 
 model Guard {
-  id String @id @default(uuid())
-  email String @unique
+  id       String  @id @default(uuid())
+  email    String  @unique
   password String
-  admin Boolean @default(false)
+  admin    Boolean @default(false)
   disabled Boolean @default(false)
-  personId Int @unique
-  peson Person @relation(fields: [personId], references: [id], onDelete: Cascade)
+  personId Int     @unique
+  peson    Person  @relation(fields: [personId], references: [id], onDelete: Cascade)
 }
 
 model Track {
-  id String @id @default(uuid())
-  trackName String @unique
+  id           String   @id @default(uuid())
+  trackName    String   @unique
   creationDate DateTime @default(now())
-  strands Strand[]
+  strands      Strand[]
 }
 
 model Strand {
-  id String @id @default(uuid())
-  strandName String @unique
-  trackId String
-  creationDate DateTime @default(now())
-  track Track @relation(fields: [trackId], references: [id], onDelete: Cascade)
+  id           String    @id @default(uuid())
+  strandName   String    @unique
+  trackId      String
+  creationDate DateTime  @default(now())
+  track        Track     @relation(fields: [trackId], references: [id], onDelete: Cascade)
+  sections     Section[]
+}
+
+enum GradeLevel {
+  G11
+  G12
+}
+
+model Section {
+  id           String     @id @default(uuid())
+  sectionName  String     @unique
+  gradeLevel   GradeLevel
+  creationDate DateTime   @default(now())
+  strandId     String
+  strand       Strand     @relation(fields: [strandId], references: [id])
 }

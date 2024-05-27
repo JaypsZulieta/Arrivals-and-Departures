@@ -1,7 +1,7 @@
 import { PaginatedContent, PaginationOptions } from 'src/pagination';
 import { Section } from './sections.entity';
 import { SectionRepository } from './section.repository';
-import { ConflictException, NotFoundException } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 
 export abstract class SectionService {
   public abstract create(section: Section): Promise<Section>;
@@ -17,6 +17,7 @@ export abstract class SectionService {
   public abstract delete(id: string): Promise<void>;
 }
 
+@Injectable()
 export class StandardSectionService implements SectionService {
   private repository: SectionRepository;
 
