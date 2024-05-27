@@ -3,6 +3,7 @@ import Crypto from 'crypto';
 type SectionConstructorArguments = {
   id?: string;
   name: string;
+  gradeLevel: 'G11' | 'G12';
   strand: string;
   track: string;
   creationDate?: Date;
@@ -11,6 +12,7 @@ type SectionConstructorArguments = {
 export class Section {
   private id: string = Crypto.randomUUID();
   private name: string;
+  private gradeLevel: 'G11' | 'G12';
   private strand: string;
   private track: string;
   private creationDate: Date = new Date();
@@ -19,6 +21,7 @@ export class Section {
     if (constructoArguments.id) this.id = constructoArguments.id;
     if (constructoArguments.creationDate)
       this.creationDate = constructoArguments.creationDate;
+    this.gradeLevel = constructoArguments.gradeLevel;
     this.strand = constructoArguments.strand;
     this.track = constructoArguments.track;
     this.name = constructoArguments.name;
@@ -34,6 +37,14 @@ export class Section {
 
   public setName(name?: string): void {
     if (name) this.name = name;
+  }
+
+  public setGradeLevel(level?: 'G11' | 'G12'): void {
+    if (level) this.gradeLevel = level;
+  }
+
+  public getGradeLevel(): 'G11' | 'G12' {
+    return this.gradeLevel;
   }
 
   public setStrand(strand?: string): void {
@@ -56,6 +67,7 @@ export class Section {
 export class SectionBuilder {
   private idToSet?: string;
   private nameToSet: string = 'Epyc';
+  private gradeLevelToSet: 'G11' | 'G12' = 'G12';
   private strandToSet: string = 'Programming';
   private trackToSet: string = 'Technical Vocational and Livelihood Track';
   private creationDateToSet?: Date;
@@ -67,6 +79,11 @@ export class SectionBuilder {
 
   public name(name: string): SectionBuilder {
     this.nameToSet = name;
+    return this;
+  }
+
+  public gradeLevel(level: 'G11' | 'G12'): SectionBuilder {
+    this.gradeLevelToSet = level;
     return this;
   }
 
@@ -89,6 +106,7 @@ export class SectionBuilder {
     return new Section({
       id: this.idToSet,
       name: this.nameToSet,
+      gradeLevel: this.gradeLevelToSet,
       strand: this.strandToSet,
       track: this.trackToSet,
       creationDate: this.creationDateToSet,
