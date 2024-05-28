@@ -19,14 +19,15 @@ datasource db {
 }
 
 model Person {
-  id           Int      @id @default(autoincrement())
+  id           Int       @id @default(autoincrement())
   firstname    String
   middlename   String?
   lastname     String
   sex          Sex
-  avatarURL    String   @default("https://robohash.org/user")
-  creationDate DateTime @default(now())
+  avatarURL    String    @default("https://robohash.org/user")
+  creationDate DateTime  @default(now())
   guard        Guard[]
+  student      Student[]
 }
 
 model Guard {
@@ -67,4 +68,14 @@ model Section {
   creationDate DateTime   @default(now())
   strandId     String
   strand       Strand     @relation(fields: [strandId], references: [id])
+  students     Student[]
+}
+
+model Student {
+  learnerReferenceNumber String  @id
+  guardianPhoneNumber    String
+  personId               Int     @unique
+  sectionId              String
+  person                 Person  @relation(fields: [personId], references: [id])
+  section                Section @relation(fields: [sectionId], references: [id])
 }
