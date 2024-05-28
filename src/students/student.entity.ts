@@ -68,3 +68,81 @@ export class Student extends Person {
     if (phoneNumber) this.guardianPhoneNumber = phoneNumber;
   }
 }
+
+export class StudentBuilder {
+  private lrnToSet: string = '123456789012';
+  private gradeLevelToSet: 'G11' | 'G12' = 'G12';
+  private sectionToSet: string = 'EPYC';
+  private strandToSet: string = 'Programming';
+  private trackToSet: string = 'Technical Vocational and Livelihood Track';
+  private guardianPhoneNumberToSet: string = '+6309053861265';
+  private firstnameToSet: string = 'John';
+  private middlenameToSet: string | null = null;
+  private lastnameToSet: string = 'Smith';
+  private sexToSet: Sex;
+
+  public learnerReferenceNumber(lrn: string): StudentBuilder {
+    this.lrnToSet = lrn;
+    return this;
+  }
+
+  public gradeLevel(level: 'G11' | 'G12'): StudentBuilder {
+    this.gradeLevelToSet = level;
+    return this;
+  }
+
+  public section(section: string): StudentBuilder {
+    this.sectionToSet = section;
+    return this;
+  }
+
+  public strand(strand: string): StudentBuilder {
+    this.strandToSet = strand;
+    return this;
+  }
+
+  public track(track: string): StudentBuilder {
+    this.trackToSet = track;
+    return this;
+  }
+
+  public guardianPhoneNumber(number: string): StudentBuilder {
+    this.guardianPhoneNumberToSet = number;
+    return this;
+  }
+
+  public firstname(firstname: string): StudentBuilder {
+    this.firstnameToSet = firstname;
+    return this;
+  }
+
+  public middlename(middlename: string): StudentBuilder {
+    this.middlenameToSet = middlename;
+    return this;
+  }
+
+  public lastname(lastname: string): StudentBuilder {
+    this.lastnameToSet = lastname;
+    return this;
+  }
+
+  public sex(sex: Sex): StudentBuilder {
+    this.sexToSet = sex;
+    return this;
+  }
+
+  public build(): Student {
+    return new Student({
+      learnerReferenceNumber: this.lrnToSet,
+      gradeLevel: this.gradeLevelToSet,
+      section: this.sectionToSet,
+      strand: this.strandToSet,
+      track: this.trackToSet,
+      guardianPhoneNumber: this.guardianPhoneNumberToSet,
+      firstname: this.firstnameToSet,
+      middlnemae: this.middlenameToSet,
+      lastname: this.lastnameToSet,
+      sex: this.sexToSet,
+    });
+  }
+}
