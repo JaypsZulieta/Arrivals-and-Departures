@@ -79,7 +79,7 @@ export class StudentBuilder {
   private firstnameToSet: string = 'John';
   private middlenameToSet: string | null = null;
   private lastnameToSet: string = 'Smith';
-  private sexToSet: Sex;
+  private sexToSet: Sex = Sex.MALE;
 
   public learnerReferenceNumber(lrn: string): StudentBuilder {
     this.lrnToSet = lrn;
