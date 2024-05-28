@@ -1,3 +1,4 @@
+import { Exclude } from 'class-transformer';
 import { Person, Sex } from '../people/person.entity';
 
 type StudentConstructorArguments = {
@@ -19,6 +20,7 @@ export class Student extends Person {
   private section: string;
   private strand: string;
   private track: string;
+  @Exclude()
   private guardianPhoneNumber: string;
 
   constructor(constructorArguments: StudentConstructorArguments) {
