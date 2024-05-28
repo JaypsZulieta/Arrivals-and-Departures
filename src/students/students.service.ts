@@ -8,5 +8,5 @@ export abstract class StudentService {
   abstract count(): Promise<number>;
   abstract findAll(options: PaginationOptions): Promise<PaginatedContent<Student>>;
   abstract update(student: Student): Promise<Student>;
-  abstract delete(id: string): Promise<void>;
+  abstract delete(lrn: string): Promise<void>;
 }
