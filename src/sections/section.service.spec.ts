@@ -1,7 +1,8 @@
 import { NotFoundException } from '@nestjs/common';
-import { SectionRepository, mockSectionRepository } from './section.repository';
+import { SectionRepository } from './section.repository';
 import { SectionBuilder } from './sections.entity';
 import { SectionService, StandardSectionService } from './sections.service';
+import { mockSectionRepository } from './section.repository.spec';
 
 let repository: jest.Mocked<SectionRepository>;
 let service: SectionService;

@@ -23,7 +23,7 @@ export class StandardStudentService implements StudentService {
 
   public async create(student: Student): Promise<Student> {
     const learnerReferenceNumber = student.getLearnerReferenceNumber();
-    if (!(await this.existByLrn(learnerReferenceNumber))) {
+    if (await this.existByLrn(learnerReferenceNumber)) {
       const conflictMessage = `student with lrn '${learnerReferenceNumber}' already exists`;
       throw new ConflictException(conflictMessage);
     }
