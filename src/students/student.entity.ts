@@ -116,7 +116,7 @@ export class StudentBuilder {
     return this;
   }
 
-  public middlename(middlename: string): StudentBuilder {
+  public middlename(middlename: string | null): StudentBuilder {
     this.middlenameToSet = middlename;
     return this;
   }
